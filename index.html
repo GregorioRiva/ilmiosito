@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gregorio Riva</title>
+
+    <style>
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+        margin: 40px;
+      }
+
+      p { margin: 0 0 16px 0; }
+
+      a {
+        color: black;
+        text-decoration: underline;
+      }
+      a:hover { opacity: 0.7; }
+
+      /* ===== riga superiore: scacchiera + info ===== */
+      .top{
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 60px;
+        align-items: stretch;
+      }
+
+      .right{
+        max-width: 420px;
+
+        /* allineamento ottico con le LETTERE */
+        padding-top: 20px;
+
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        box-sizing: border-box; /* 🔥 FIX */
+      }
+
+      .desc{
+        margin-bottom: 16px;
+      }
+
+      .social{
+        margin-top: auto; /* va in basso */
+      }
+
+      /* ===== scacchiera ===== */
+      .dock-grid{
+        display: grid;
+        gap: 0;
+        padding-left: 10px;
+      }
+
+      .dock-grid .row{
+        display: flex;
+        gap: 0;
+      }
+
+      .letter{
+        width: 90px;
+        height: 90px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: transparent;
+        overflow: hidden;
+        transition: background-color 180ms ease;
+      }
+
+      .char{
+        font-size: 42px;
+        font-weight: 700;
+        line-height: 1;
+        transform: scale(1);
+        transition: transform 180ms ease;
+      }
+
+      .letter:hover .char{
+        transform: scale(1.6);
+      }
+
+      /* ===== portfolio sotto ===== */
+      .portfolio{
+        margin-top: 28px;
+      }
+
+      .portfolio h2{
+        margin: 0 0 10px 0;
+      }
+
+      /* responsive */
+      @media (max-width: 900px){
+        .top{
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .right{
+          max-width: none;
+          padding-top: 0;
+          height: auto;
+        }
+
+        .social{
+          margin-top: 14px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- RIGA TOP -->
+    <div class="top">
+      <!-- SINISTRA: scacchiera -->
+      <div class="left">
+        <div class="dock-grid">
+          <div class="row">
+            <span class="letter"><span class="char">G</span></span>
+            <span class="letter"><span class="char">R</span></span>
+            <span class="letter"><span class="char">E</span></span>
+            <span class="letter"><span class="char">G</span></span>
+          </div>
+          <div class="row">
+            <span class="letter"><span class="char">O</span></span>
+            <span class="letter"><span class="char">R</span></span>
+            <span class="letter"><span class="char">I</span></span>
+            <span class="letter"><span class="char">O</span></span>
+          </div>
+          <div class="row">
+            <span class="letter"><span class="char">R</span></span>
+            <span class="letter"><span class="char">I</span></span>
+            <span class="letter"><span class="char">V</span></span>
+            <span class="letter"><span class="char">A</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESTRA: testo + social -->
+      <div class="right">
+        <p class="desc">
+          Mi chiamo Gregorio, ma potete chiamarmi Greg! <br>
+          Studio visual design alla SUPSI/DACD di Mendrisio. <br>
+          Questo sito è il mio spazio personale dove raccolgo progetti e idee in evoluzione.
+        </p>
+
+        <p class="social">
+          <a href="https://www.instagram.com/g.orilla.art/" target="_blank" rel="noreferrer">Instagram</a><br>
+          <a href="https://github.com/GregorioRiva" target="_blank" rel="noreferrer">GitHub</a><br>
+          <a href="mailto:greg.riva@bluewin.ch">Email personale</a><br>
+          <a href="mailto:gregorio.riva@student.supsi.ch">Email SUPSI</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div class="portfolio">
+      <h2>Esercizi</h2>
+      <ol>
+        <li><a href="#">Esercizio 1</a></li>
+        <li><a href="#">Esercizio 2</a></li>
+        <li><a href="#">Esercizio 3</a></li>
+        <li><a href="#">Esercizio 4</a></li>
+      </ol>
+    </div>
+
+    <script>
+      const start = { r: 0, g: 90, b: 255 };
+      const end   = { r: 0, g: 200, b: 255 };
+
+      function lerp(a, b, t) {
+        return Math.round(a + (b - a) * t);
+      }
+
+      function colorAt(i, n) {
+        const t = i / (n - 1);
+        return `rgb(
+          ${lerp(start.r, end.r, t)},
+          ${lerp(start.g, end.g, t)},
+          ${lerp(start.b, end.b, t)}
+        )`;
+      }
+
+      const tiles = document.querySelectorAll(".letter");
+      tiles.forEach((tile, i) => {
+        const color = colorAt(i, tiles.length);
+        tile.onmouseenter = () => tile.style.backgroundColor = color;
+        tile.onmouseleave = () => tile.style.backgroundColor = "transparent";
+      });
+    </script>
+  </body>
+</html>
