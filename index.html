@@ -1,198 +1,221 @@
 <!doctype html>
 <html lang="it">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Gregorio Riva</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gregorio Riva</title>
 
-    <style>
-      body {
-        font-family: Helvetica, Arial, sans-serif;
-        line-height: 1.5;
-        margin: 40px;
-      }
+  <style>
+    :root{
+      --tile: 90px;
+      --gap: 30px;
+      --rightCol: 640px;
+      --exerciseOffset: 28px; /* ↓ meno spostamento verso destra */
+    }
 
-      p { margin: 0 0 16px 0; }
+    body{
+      font-family: Helvetica, Arial, sans-serif;
+      margin: 40px;
+      background: black;
+      color: white;
+      font-size: 16.5px; /* ↓ leggermente più piccolo */
+      line-height: 1.5;
+    }
 
-      a {
-        color: black;
-        text-decoration: underline;
-      }
-      a:hover { opacity: 0.7; }
+    p{ margin: 0; }
 
-      /* ===== riga superiore: scacchiera + info ===== */
+    a{
+      color: white;
+      text-decoration: none;
+      transition: opacity 150ms ease, transform 150ms ease;
+    }
+
+    a:hover{
+      opacity: 0.6;
+      transform: translateX(2px);
+    }
+
+    /* ===== TOP ===== */
+    .top{
+      display: grid;
+      grid-template-columns: 1fr var(--rightCol);
+      gap: var(--gap);
+      align-items: start;
+      margin-bottom: 80px;
+    }
+
+    .right{
+      height: calc(var(--tile) * 3);
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+      box-sizing: border-box;
+    }
+
+    .desc{
+      font-size: 17px; /* ↓ prima 18 */
+      line-height: 1.55;
+      white-space: nowrap;
+    }
+
+    /* ===== SOCIAL ===== */
+    .social{
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: auto auto;
+      column-gap: 28px;
+      row-gap: 6px;
+      font-size: 17px; /* ↓ prima 18 */
+      line-height: 1.55;
+      white-space: nowrap;
+    }
+
+    /* ===== SCACCHIERA ===== */
+    .dock-grid{
+      display: grid;
+      padding-left: 10px;
+    }
+
+    .dock-grid .row{
+      display: flex;
+    }
+
+    .letter{
+      width: var(--tile);
+      height: var(--tile);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: black;
+      transition: background-color 180ms ease;
+    }
+
+    .char{
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1;
+      color: white;
+      transition: transform 180ms ease, color 180ms ease;
+    }
+
+    .letter:hover{
+      background: white;
+    }
+
+    .letter:hover .char{
+      color: black;
+      transform: scale(1.6);
+    }
+
+    /* ===== ESERCIZI ===== */
+    .portfolio{
+      padding-left: calc(10px + var(--exerciseOffset));
+    }
+
+    .portfolio h2{
+      margin: 0 0 14px 0;
+      font-size: 26px; /* leggermente più compatto */
+      font-weight: 700;
+    }
+
+    .portfolio ol{
+      margin: 0;
+      padding-left: 0;
+      list-style-position: inside;
+      font-size: 19px; /* ↓ di poco */
+      line-height: 1.55;
+    }
+
+    .portfolio li{
+      margin-bottom: 8px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px){
       .top{
-        display: grid;
-        grid-template-columns: 1fr 420px;
-        gap: 60px;
-        align-items: stretch;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-bottom: 40px;
       }
 
       .right{
-        max-width: 420px;
-
-        /* allineamento ottico con le LETTERE */
-        padding-top: 20px;
-
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-
-        box-sizing: border-box; /* 🔥 FIX */
+        height: auto;
+        padding-top: 0;
       }
 
       .desc{
-        margin-bottom: 16px;
+        white-space: normal;
       }
 
       .social{
-        margin-top: auto; /* va in basso */
+        margin-top: 14px;
+        grid-template-columns: 1fr;
+        column-gap: 0;
+        white-space: normal;
       }
 
-      /* ===== scacchiera ===== */
-      .dock-grid{
-        display: grid;
-        gap: 0;
-        padding-left: 10px;
-      }
-
-      .dock-grid .row{
-        display: flex;
-        gap: 0;
-      }
-
-      .letter{
-        width: 90px;
-        height: 90px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: transparent;
-        overflow: hidden;
-        transition: background-color 180ms ease;
-      }
-
-      .char{
-        font-size: 42px;
-        font-weight: 700;
-        line-height: 1;
-        transform: scale(1);
-        transition: transform 180ms ease;
-      }
-
-      .letter:hover .char{
-        transform: scale(1.6);
-      }
-
-      /* ===== portfolio sotto ===== */
       .portfolio{
-        margin-top: 28px;
+        padding-left: 0;
       }
+    }
+  </style>
+</head>
 
-      .portfolio h2{
-        margin: 0 0 10px 0;
-      }
+<body>
 
-      /* responsive */
-      @media (max-width: 900px){
-        .top{
-          grid-template-columns: 1fr;
-          gap: 30px;
-        }
-
-        .right{
-          max-width: none;
-          padding-top: 0;
-          height: auto;
-        }
-
-        .social{
-          margin-top: 14px;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- RIGA TOP -->
-    <div class="top">
-      <!-- SINISTRA: scacchiera -->
-      <div class="left">
-        <div class="dock-grid">
-          <div class="row">
-            <span class="letter"><span class="char">G</span></span>
-            <span class="letter"><span class="char">R</span></span>
-            <span class="letter"><span class="char">E</span></span>
-            <span class="letter"><span class="char">G</span></span>
-          </div>
-          <div class="row">
-            <span class="letter"><span class="char">O</span></span>
-            <span class="letter"><span class="char">R</span></span>
-            <span class="letter"><span class="char">I</span></span>
-            <span class="letter"><span class="char">O</span></span>
-          </div>
-          <div class="row">
-            <span class="letter"><span class="char">R</span></span>
-            <span class="letter"><span class="char">I</span></span>
-            <span class="letter"><span class="char">V</span></span>
-            <span class="letter"><span class="char">A</span></span>
-          </div>
+  <div class="top">
+    <!-- SINISTRA -->
+    <div class="left">
+      <div class="dock-grid">
+        <div class="row">
+          <span class="letter"><span class="char">G</span></span>
+          <span class="letter"><span class="char">R</span></span>
+          <span class="letter"><span class="char">E</span></span>
+          <span class="letter"><span class="char">G</span></span>
+        </div>
+        <div class="row">
+          <span class="letter"><span class="char">O</span></span>
+          <span class="letter"><span class="char">R</span></span>
+          <span class="letter"><span class="char">I</span></span>
+          <span class="letter"><span class="char">O</span></span>
+        </div>
+        <div class="row">
+          <span class="letter"><span class="char">R</span></span>
+          <span class="letter"><span class="char">I</span></span>
+          <span class="letter"><span class="char">V</span></span>
+          <span class="letter"><span class="char">A</span></span>
         </div>
       </div>
+    </div>
 
-      <!-- DESTRA: testo + social -->
-      <div class="right">
-        <p class="desc">
-          Mi chiamo Gregorio, ma potete chiamarmi Greg! <br>
-          Sono uno studente di comunicazione visiva alla SUPSI/DACD di Mendrisio. <br>
-          Questo sito è il mio spazio personale dove raccolgo progetti e idee in evoluzione.
-        </p>
+    <!-- DESTRA -->
+    <div class="right">
+      <p class="desc">
+        Mi chiamo Gregorio, ma potete chiamarmi Greg!<br>
+        Sono uno studente di comunicazione visiva alla SUPSI/DACD di Mendrisio.<br>
+        Questo sito è il mio spazio personale dove raccolgo progetti e idee in evoluzione.
+      </p>
 
-        <p class="social">
-          <a href="https://www.instagram.com/g.orilla.art/" target="_blank" rel="noreferrer">Instagram</a><br>
-          <a href="https://github.com/GregorioRiva" target="_blank" rel="noreferrer">GitHub</a><br>
-          <a href="mailto:greg.riva@bluewin.ch">Email personale</a><br>
-          <a href="mailto:gregorio.riva@student.supsi.ch">Email SUPSI</a>
-        </p>
+      <div class="social">
+        <a href="#">Instagram</a>
+        <a href="#">Email personale</a>
+
+        <a href="#">GitHub</a>
+        <a href="#">Email SUPSI</a>
       </div>
     </div>
+  </div>
 
-    <!-- PORTFOLIO -->
-    <div class="portfolio">
-      <h2>Esercizi</h2>
-      <ol>
-        <li><a href="#">Esercizio 1</a></li>
-        <li><a href="#">Esercizio 2</a></li>
-        <li><a href="#">Esercizio 3</a></li>
-        <li><a href="#">Esercizio 4</a></li>
-      </ol>
-    </div>
+  <div class="portfolio">
+    <h2>Esercizi</h2>
+    <ol>
+      <li>Autoritratto2D</li>
+      <li>Autoritratto3D</li>
+      <li>Esercizio 3</li>
+      <li>Esercizio 4</li>
+      <li>Esercizio 5</li>
+    </ol>
+  </div>
 
-    <script>
-      const start = { r: 0, g: 90, b: 255 };
-      const end   = { r: 0, g: 200, b: 255 };
-
-      function lerp(a, b, t) {
-        return Math.round(a + (b - a) * t);
-      }
-
-      function colorAt(i, n) {
-        const t = i / (n - 1);
-        return `rgb(
-          ${lerp(start.r, end.r, t)},
-          ${lerp(start.g, end.g, t)},
-          ${lerp(start.b, end.b, t)}
-        )`;
-      }
-
-      const tiles = document.querySelectorAll(".letter");
-      tiles.forEach((tile, i) => {
-        const color = colorAt(i, tiles.length);
-        tile.onmouseenter = () => tile.style.backgroundColor = color;
-        tile.onmouseleave = () => tile.style.backgroundColor = "transparent";
-      });
-    </script>
-  </body>
+</body>
 </html>
