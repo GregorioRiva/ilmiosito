@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		body {
+			background-color: gray;
+			margin: 0;
+		}
+	</style>
+</head>
+<body>
+	<script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+	<script>
+
+		let shape
+		let tex
+		function preload() {
+			shape = loadModel('ag/ag.obj', true)
+			tex = loadImage('ag/ag.jpg')
+		}
+
+		const OFFS_RY = 4.1
+
+		function setup() {
+			createCanvas(windowWidth, windowHeight, WEBGL)
+		}
+
+		function onWindowResized() {
+			resizeCanvas(windowWidth, windowHeight)
+		}
+
+		function draw() {
+			// background(0)
+			// const rotY = -(mouseX - width/2) * 0.005
+			// const rotX = -(mouseY - height/2) * 0.005
+			// const scl = 2.5
+
+			const rotX = sin(frameCount * 0.0063) * TAU
+			const rotY = sin(frameCount * 0.0064) * TAU
+			const scl = sin(frameCount * 0.0065) * 4 + 4.5
+
+			rotateX(PI + rotX)
+			rotateY(rotY + OFFS_RY)
+			scale(scl)
+
+			noStroke()
+			textureMode(NORMAL)
+			texture(tex)
+			model(shape)
+		}
+	</script>
+</body>
+</html>
