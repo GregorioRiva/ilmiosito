@@ -1,57 +1,108 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ritratto p5.js</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+
+  <style>
+    body { margin: 0; display: grid; place-items: center; height: 100vh; background: #f4f4f4; }
+    canvas { display: block; }
+  </style>
+</head>
+
+<body>
+<script>
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(640, 640);
+  angleMode(DEGREES);
   noLoop();
 }
 
 function draw() {
-  background(245);
+  background(244);
 
-  // centro del volto
-  let cx = width / 2;
-  let cy = height / 2;
+  const cx = width / 2;
+  const cy = height / 2 + 10;
 
-  stroke(0);
+  const ink = color(10);
+  const accent = color(0, 120, 255);
+
+  stroke(ink);
   strokeWeight(3);
-  noFill();
+  fill(235);
+  ellipse(cx, cy, 320, 390);
 
-  // ===== TESTA =====
-  ellipse(cx, cy, 300, 360);
+  noStroke();
+  fill(ink);
+  arc(cx, cy - 145, 340, 240, 180, 360);
+  rect(cx - 170, cy - 145, 340, 65);
 
-  // ===== OCCHI =====
-  rectMode(CENTER);
-
-  // occhio sinistro
-  rect(cx - 70, cy - 40, 80, 40);
-  ellipse(cx - 70, cy - 40, 16);
-
-  // occhio destro
-  rect(cx + 70, cy - 40, 80, 40);
-  ellipse(cx + 70, cy - 40, 16);
-
-  // ===== SOPRACCIGLIA =====
-  strokeWeight(5);
-  line(cx - 110, cy - 85, cx - 30, cy - 95);
-  line(cx + 30, cy - 95, cx + 110, cy - 85);
-
-  // ===== NASO =====
-  strokeWeight(3);
-  triangle(
-    cx, cy - 10,
-    cx - 20, cy + 70,
-    cx + 20, cy + 70
-  );
-
-  // ===== BOCCA =====
-  strokeWeight(4);
-  line(cx - 50, cy + 120, cx + 50, cy + 120);
-
-  // ===== CAPELLI (linee) =====
+  stroke(244);
   strokeWeight(2);
-  for (let x = cx - 130; x <= cx + 130; x += 10) {
-    line(x, cy - 180, x, cy - 110);
+  for (let x = cx - 150; x <= cx + 150; x += 12) {
+    line(x, cy - 195, x + 20, cy - 105);
   }
 
-  // ===== COLLO =====
+  stroke(ink);
+  strokeWeight(6);
+  line(cx - 120, cy - 80, cx - 35, cy - 95);
+  line(cx + 35, cy - 95, cx + 120, cy - 80);
+
+  rectMode(CENTER);
   strokeWeight(3);
-  rect(cx, cy + 230, 120, 100, 10);
+  fill(255);
+  rect(cx - 75, cy - 35, 90, 50, 10);
+  rect(cx + 75, cy - 35, 90, 50, 10);
+
+  fill(ink);
+  circle(cx - 75, cy - 35, 18);
+  circle(cx + 75, cy - 35, 18);
+
+  noStroke();
+  fill(accent);
+  circle(cx - 68, cy - 43, 6);
+  circle(cx + 82, cy - 43, 6);
+
+  stroke(ink);
+  strokeWeight(3);
+  noFill();
+  triangle(cx, cy - 10, cx - 22, cy + 75, cx + 18, cy + 75);
+  line(cx + 18, cy + 75, cx + 34, cy + 78);
+
+  strokeWeight(4);
+  arc(cx, cy + 125, 140, 70, 15, 165);
+  strokeWeight(3);
+  line(cx - 55, cy + 120, cx + 55, cy + 120);
+
+  stroke(ink);
+  strokeWeight(3);
+  fill(235);
+  rect(cx, cy + 245, 150, 120, 18);
+
+  stroke(0, 0, 0, 35);
+  strokeWeight(2);
+  for (let y = cy + 205; y <= cy + 285; y += 10) {
+    line(cx - 65, y, cx + 65, y - 18);
+  }
+
+  stroke(ink);
+  strokeWeight(3);
+  fill(255);
+  beginShape();
+  vertex(cx - 240, cy + 295);
+  vertex(cx + 240, cy + 295);
+  vertex(cx + 190, cy + 560);
+  vertex(cx - 190, cy + 560);
+  endShape(CLOSE);
+
+  stroke(accent);
+  strokeWeight(5);
+  line(cx - 140, cy + 380, cx + 140, cy + 380);
+  line(cx - 140, cy + 410, cx + 140, cy + 410);
 }
+</script>
+</body>
+</html>
