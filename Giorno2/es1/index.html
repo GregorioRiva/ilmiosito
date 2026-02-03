@@ -1,64 +1,161 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <title>Disegno con triangoli pieni</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ritratto astratto geometrico — p5.js</title>
 
-  <!-- p5.js -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
 
   <style>
     body{
       margin:0;
       background:#f2f2f2;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
+      display:grid;
+      place-items:center;
+      min-height:100vh;
     }
+    canvas{ display:block; }
   </style>
 </head>
 
 <body>
 <script>
-function setup() {
-  createCanvas(600, 600);
-  background(255);
-  noStroke();   // niente contorno
+let frozen = false;
+let fx = 0, fy = 0;
+let step = 22; // densità (modificabile con rotella)
+
+function setup(){
+  createCanvas(720, 720);
+  pixelDensity(2);
+  noStroke();
 }
 
-function draw() {
-  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
+function draw(){
+  background(245);
 
-    // direzione del movimento
-    let angle = atan2(mouseY - pmouseY, mouseX - pmouseX);
+  // centro “presenza” (interattivo)
+  const mx = frozen ? fx : mouseX;
+  const my = frozen ? fy : mouseY;
 
-    // dimensione in base alla velocità
-    let speed = dist(mouseX, mouseY, pmouseX, pmouseY);
-    let size = constrain(speed * 2, 8, 40);
+  const cx = map(constrain(mx, 0, width), 0, width,  width*0.35, width*0.65);
+  const cy = map(constrain(my, 0, height), 0, height, height*0.30, height*0.70);
 
-    // COLORE PIENO (no alpha)
-    fill(0, 120, 255);
+  // intensità distorsione (più vicino al centro, più si “piega”)
+  const warp = map(constrain(mx, 0, width), 0, width, 0.7, 2.2);
+  const twist = map(constrain(my, 0, height), 0, height, -2.0, 2.0);
 
-    push();
-    translate(mouseX, mouseY);
-    rotate(angle);
+  // leggero “respiro” ottico
+  const t = frameCount * 0.01;
 
-    triangle(
-      -size, -size/2,
-      -size,  size/2,
-       size,  0
-    );
+  // ====== campo triangolare ======
+  // alterniamo riempimento b/n per effetto ottico
+  // e deformiamo i vertici vicino al centro (come maschera invisibile)
+  for(let y = -step; y <= height + step; y += step){
+    for(let x = -step; x <= width + step; x += step){
 
-    pop();
+      // triangolazione alternata (tipo scacchiera)
+      const flip = ((x/step + y/step) % 2 === 0);
+
+      // calcola punto “deformato” per ciascun vertice
+      const p1 = warpPoint(x, y, cx, cy, warp, twist, t);
+      const p2 = warpPoint(x + step, y, cx, cy, warp, twist, t);
+      const p3 = warpPoint(x, y + step, cx, cy, warp, twist, t);
+      const p4 = warpPoint(x + step, y + step, cx, cy, warp, twist, t);
+
+      // qui avviene l’illusione di “ritratto”:
+      // creiamo una zona centrale più compressa e due “vuoti” laterali
+      // (senza disegnare occhi o volto)
+      const mask = portraitMask(x + step*0.5, y + step*0.5, cx, cy);
+
+      // b/n deciso (Grignani vibe)
+      // mask agisce come “presenza”: vicino al volto cambia pattern
+      const ink = flip ? 0 : 255;
+      const inv = 255 - ink;
+
+      // se siamo “dentro” la presenza, invertiamo più spesso → vibrazione ottica
+      const useInk = (mask > 0.55) ? inv : ink;
+
+      fill(useInk);
+
+      if(flip){
+        tri(p1, p2, p3);
+      }else{
+        tri(p2, p4, p3);
+      }
+    }
   }
+
+  // didascalia minimal
+  fill(0, 140);
+  noStroke();
+  textSize(13);
+  text("mouse = sposta distorsione  •  click = freeze  •  rotella = densità", 16, height - 16);
 }
 
-// cancella con C
-function keyPressed(){
-  if (key === 'c' || key === 'C') {
-    background(255);
-  }
+// --- disegna triangolo da punti oggetto ---
+function tri(a,b,c){
+  triangle(a.x,a.y,b.x,b.y,c.x,c.y);
+}
+
+// --- maschera astratta (non è un volto disegnato) ---
+// ritorna 0..1: zona “testa” centrale + due “vuoti” laterali tipo cavità
+function portraitMask(x, y, cx, cy){
+  // forma principale (ellisse) ma NON la disegniamo, serve solo per decidere pattern
+  const head = 1.0 - constrain(dist(x, y, cx, cy) / 260, 0, 1);
+
+  // due cavità laterali (tipo “occhi” astratti) come zone che “bucano” il pattern
+  const eyeL = 1.0 - constrain(dist(x, y, cx - 95, cy - 35) / 85, 0, 1);
+  const eyeR = 1.0 - constrain(dist(x, y, cx + 95, cy - 35) / 85, 0, 1);
+
+  // una “bocca” astratta (taglio) che disturba l’area bassa
+  const mouth = 1.0 - constrain(dist(x, y, cx, cy + 125) / 110, 0, 1);
+
+  // combinazione: testa forte ma sottrai cavità (più astratto)
+  let m = head;
+  m -= 0.55 * max(eyeL, eyeR);
+  m -= 0.25 * mouth;
+
+  return constrain(m, 0, 1);
+}
+
+// --- distorsione geometrica (torsione + onda + compressione radiale) ---
+function warpPoint(x, y, cx, cy, warp, twist, t){
+  const dx = x - cx;
+  const dy = y - cy;
+  const d = sqrt(dx*dx + dy*dy) + 0.0001;
+
+  // torsione: più vicino = più ruota
+  const a = (twist / (d * 0.010)) ;
+
+  const ca = cos(a);
+  const sa = sin(a);
+
+  let rx = dx * ca - dy * sa;
+  let ry = dx * sa + dy * ca;
+
+  // compressione radiale (come lente)
+  const lens = 1.0 - (warp * 0.35) * exp(-d / 140);
+  rx *= lens;
+  ry *= lens;
+
+  // onda “grignani” (molto controllata, geometrica)
+  const wave = sin((x * 0.045) + (y * 0.020) + t) * 10 * warp;
+
+  return { x: cx + rx + wave, y: cy + ry };
+}
+
+// interazione
+function mousePressed(){
+  frozen = !frozen;
+  fx = mouseX; fy = mouseY;
+}
+
+function mouseWheel(e){
+  // e.delta: positivo = giù
+  step += (e.delta > 0) ? 2 : -2;
+  step = constrain(step, 10, 48);
+  return false; // evita scroll pagina
 }
 </script>
 </body>
