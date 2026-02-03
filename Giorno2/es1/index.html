@@ -1,107 +1,64 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ritratto p5.js</title>
+  <meta charset="utf-8">
+  <title>Disegno con triangoli pieni</title>
 
+  <!-- p5.js -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
 
   <style>
-    body { margin: 0; display: grid; place-items: center; height: 100vh; background: #f4f4f4; }
-    canvas { display: block; }
+    body{
+      margin:0;
+      background:#f2f2f2;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
   </style>
 </head>
 
 <body>
 <script>
 function setup() {
-  createCanvas(640, 640);
-  angleMode(DEGREES);
-  noLoop();
+  createCanvas(600, 600);
+  background(255);
+  noStroke();   // niente contorno
 }
 
 function draw() {
-  background(244);
+  if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) {
 
-  const cx = width / 2;
-  const cy = height / 2 + 10;
+    // direzione del movimento
+    let angle = atan2(mouseY - pmouseY, mouseX - pmouseX);
 
-  const ink = color(10);
-  const accent = color(0, 120, 255);
+    // dimensione in base alla velocità
+    let speed = dist(mouseX, mouseY, pmouseX, pmouseY);
+    let size = constrain(speed * 2, 8, 40);
 
-  stroke(ink);
-  strokeWeight(3);
-  fill(235);
-  ellipse(cx, cy, 320, 390);
+    // COLORE PIENO (no alpha)
+    fill(0, 120, 255);
 
-  noStroke();
-  fill(ink);
-  arc(cx, cy - 145, 340, 240, 180, 360);
-  rect(cx - 170, cy - 145, 340, 65);
+    push();
+    translate(mouseX, mouseY);
+    rotate(angle);
 
-  stroke(244);
-  strokeWeight(2);
-  for (let x = cx - 150; x <= cx + 150; x += 12) {
-    line(x, cy - 195, x + 20, cy - 105);
+    triangle(
+      -size, -size/2,
+      -size,  size/2,
+       size,  0
+    );
+
+    pop();
   }
+}
 
-  stroke(ink);
-  strokeWeight(6);
-  line(cx - 120, cy - 80, cx - 35, cy - 95);
-  line(cx + 35, cy - 95, cx + 120, cy - 80);
-
-  rectMode(CENTER);
-  strokeWeight(3);
-  fill(255);
-  rect(cx - 75, cy - 35, 90, 50, 10);
-  rect(cx + 75, cy - 35, 90, 50, 10);
-
-  fill(ink);
-  circle(cx - 75, cy - 35, 18);
-  circle(cx + 75, cy - 35, 18);
-
-  noStroke();
-  fill(accent);
-  circle(cx - 68, cy - 43, 6);
-  circle(cx + 82, cy - 43, 6);
-
-  stroke(ink);
-  strokeWeight(3);
-  noFill();
-  triangle(cx, cy - 10, cx - 22, cy + 75, cx + 18, cy + 75);
-  line(cx + 18, cy + 75, cx + 34, cy + 78);
-
-  strokeWeight(4);
-  arc(cx, cy + 125, 140, 70, 15, 165);
-  strokeWeight(3);
-  line(cx - 55, cy + 120, cx + 55, cy + 120);
-
-  stroke(ink);
-  strokeWeight(3);
-  fill(235);
-  rect(cx, cy + 245, 150, 120, 18);
-
-  stroke(0, 0, 0, 35);
-  strokeWeight(2);
-  for (let y = cy + 205; y <= cy + 285; y += 10) {
-    line(cx - 65, y, cx + 65, y - 18);
+// cancella con C
+function keyPressed(){
+  if (key === 'c' || key === 'C') {
+    background(255);
   }
-
-  stroke(ink);
-  strokeWeight(3);
-  fill(255);
-  beginShape();
-  vertex(cx - 240, cy + 295);
-  vertex(cx + 240, cy + 295);
-  vertex(cx + 190, cy + 560);
-  vertex(cx - 190, cy + 560);
-  endShape(CLOSE);
-
-  stroke(accent);
-  strokeWeight(5);
-  line(cx - 140, cy + 380, cx + 140, cy + 380);
-  line(cx - 140, cy + 410, cx + 140, cy + 410);
 }
 </script>
 </body>
