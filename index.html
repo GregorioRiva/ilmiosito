@@ -10,7 +10,7 @@
       --tile: 90px;
       --gap: 30px;
       --rightCol: 640px;
-      --exerciseOffset: 28px; /* ↓ meno spostamento verso destra */
+      --exerciseOffset: 28px;
     }
 
     body{
@@ -18,7 +18,7 @@
       margin: 40px;
       background: black;
       color: white;
-      font-size: 16.5px; /* ↓ leggermente più piccolo */
+      font-size: 16.5px;
       line-height: 1.5;
     }
 
@@ -53,7 +53,7 @@
     }
 
     .desc{
-      font-size: 17px; /* ↓ prima 18 */
+      font-size: 17px;
       line-height: 1.55;
       white-space: nowrap;
     }
@@ -61,11 +61,12 @@
     /* ===== SOCIAL ===== */
     .social{
       margin-top: auto;
+      transform: translateY(-13px); /* ← ancora più minimo */
       display: grid;
       grid-template-columns: auto auto;
       column-gap: 28px;
       row-gap: 6px;
-      font-size: 17px; /* ↓ prima 18 */
+      font-size: 17px;
       line-height: 1.55;
       white-space: nowrap;
     }
@@ -114,7 +115,7 @@
 
     .portfolio h2{
       margin: 0 0 14px 0;
-      font-size: 26px; /* leggermente più compatto */
+      font-size: 26px;
       font-weight: 700;
     }
 
@@ -122,7 +123,7 @@
       margin: 0;
       padding-left: 0;
       list-style-position: inside;
-      font-size: 19px; /* ↓ di poco */
+      font-size: 19px;
       line-height: 1.55;
     }
 
@@ -149,6 +150,7 @@
 
       .social{
         margin-top: 14px;
+        transform: none;
         grid-template-columns: 1fr;
         column-gap: 0;
         white-space: normal;
