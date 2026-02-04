@@ -86,22 +86,21 @@
     }
 
     .char{
-  font-size: 42px;
-  font-weight: 700;
-  color: white;
-  user-select: none;
-  transition: color 150ms ease, transform 150ms ease;
-}
+      font-size: 42px;
+      font-weight: 700;
+      color: white;
+      user-select: none;
+      transition: color 150ms ease, transform 150ms ease;
+    }
 
-/* hover: sfondo bianco + lettera nera + lettera leggermente più grande */
-.letter:hover{
-  background: white;
-}
-.letter:hover .char{
-  color: black;
-  transform: scale(1.5); /* 👈 ingrandisce SOLO la lettera */
-}
-
+    /* hover: sfondo bianco + lettera nera + lettera leggermente più grande */
+    .letter:hover{
+      background: white;
+    }
+    .letter:hover .char{
+      color: black;
+      transform: scale(1.5); /* 👈 ingrandisce SOLO la lettera */
+    }
 
     /* ===== BLOCCO SOTTO ===== */
     .below{
@@ -222,8 +221,10 @@
       <h2>Progetti</h2>
 
       <ol>
-        <li><a href="#autoritratto2d">Autoritratto2D</a></li>
-        <li><a href="#autoritratto3d">Autoritratto3D</a></li>
+        <li><a href="#autoritratto2d">Autoritratto in 2D</a></li>
+        <li><a href="#autoritratto3d">Autoritratto in 3D</a></li>
+        <li><a href="#progetto3">Caratteri in movimento</a></li>
+        <li><a href="#progetto4">Progetto4</a></li>
       </ol>
 
       <section class="project" id="autoritratto2d">
@@ -235,6 +236,18 @@
       <section class="project" id="autoritratto3d">
         <div class="embed">
           <iframe src="Autoritratto3D/index.html"></iframe>
+        </div>
+      </section>
+
+      <section class="project" id="progetto3">
+        <div class="embed">
+          <!-- iframe futuro: es. <iframe src="Progetto3/index.html"></iframe> -->
+        </div>
+      </section>
+
+      <section class="project" id="progetto4">
+        <div class="embed">
+          <!-- iframe futuro: es. <iframe src="Progetto4/index.html"></iframe> -->
         </div>
       </section>
     </div>
@@ -260,6 +273,22 @@
         </p>
       </div>
 
+      <div class="side-text" data-target="progetto3">
+        <h4>Progetto3</h4>
+        <p>
+          Descrizione del progetto in arrivo.
+          Spazio riservato a un lavoro futuro o in fase di sviluppo.
+        </p>
+      </div>
+
+      <div class="side-text" data-target="progetto4">
+        <h4>Progetto4</h4>
+        <p>
+          Descrizione del progetto in arrivo.
+          Spazio riservato a un lavoro futuro o sperimentale.
+        </p>
+      </div>
+
     </div>
 
   </div>
@@ -280,15 +309,24 @@
     const OFFSET = -200;
     const sideTop = docTop(sideDesc);
 
+    let lastBottom = 0;
+
     document.querySelectorAll('.side-text').forEach(desc => {
       const target = document.getElementById(desc.dataset.target);
       if (!target) return;
 
       const iframe = target.querySelector('.embed iframe');
-      if (!iframe) return;
 
-      const y = docBottom(iframe) - sideTop + OFFSET;
+      let y;
+
+      if (iframe) {
+        y = docBottom(iframe) - sideTop + OFFSET;
+      } else {
+        y = lastBottom + 80; // spazio tra descrizioni senza iframe
+      }
+
       desc.style.top = y + 'px';
+      lastBottom = y + desc.offsetHeight;
     });
 
     const portfolio = document.querySelector('.portfolio');
