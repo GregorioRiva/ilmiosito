@@ -61,7 +61,7 @@
     /* ===== SOCIAL ===== */
     .social{
       margin-top: auto;
-      transform: translateY(-13px); /* ← ancora più minimo */
+      transform: translateY(-13px);
       display: grid;
       grid-template-columns: auto auto;
       column-gap: 28px;
@@ -77,9 +77,7 @@
       padding-left: 10px;
     }
 
-    .dock-grid .row{
-      display: flex;
-    }
+    .dock-grid .row{ display: flex; }
 
     .letter{
       width: var(--tile);
@@ -99,18 +97,26 @@
       transition: transform 180ms ease, color 180ms ease;
     }
 
-    .letter:hover{
-      background: white;
-    }
+    .letter:hover{ background: white; }
 
     .letter:hover .char{
       color: black;
       transform: scale(1.6);
     }
 
-    /* ===== ESERCIZI ===== */
+    /* ===== BLOCCO SOTTO (stessa griglia del TOP) ===== */
+    .below{
+      display: grid;
+      grid-template-columns: 1fr var(--rightCol);
+      gap: var(--gap);
+      align-items: start;
+    }
+
+    /* ===== PORTFOLIO (SINISTRA) ===== */
     .portfolio{
+      grid-column: 1;
       padding-left: calc(10px + var(--exerciseOffset));
+      max-width: 560px; /* ✅ più piccolo, più “a sinistra” */
     }
 
     .portfolio h2{
@@ -120,19 +126,50 @@
     }
 
     .portfolio ol{
-      margin: 0;
+      margin: 0 0 34px 0;
       padding-left: 0;
       list-style-position: inside;
       font-size: 19px;
       line-height: 1.55;
     }
 
-    .portfolio li{
-      margin-bottom: 8px;
+    .portfolio li{ margin-bottom: 8px; }
+
+    /* ===== SEZIONI PROGETTI (senza filetti/bordi) ===== */
+    .project{
+      margin-top: 44px; /* separazione solo “aria” */
+    }
+
+    .project h3{
+      margin: 0 0 14px 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .embed{
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: black; /* niente bordi */
+    }
+
+    .embed iframe{
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* ===== COLONNA DESTRA (per descrizione futura) ===== */
+    .side-desc{
+      grid-column: 2;
+      padding-top: 0; /* pronta per contenuti futuri */
     }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px){
+      body{ margin: 24px; }
+
       .top{
         grid-template-columns: 1fr;
         gap: 30px;
@@ -144,9 +181,7 @@
         padding-top: 0;
       }
 
-      .desc{
-        white-space: normal;
-      }
+      .desc{ white-space: normal; }
 
       .social{
         margin-top: 14px;
@@ -156,8 +191,18 @@
         white-space: normal;
       }
 
+      .below{
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
       .portfolio{
         padding-left: 0;
+        max-width: none;
+      }
+
+      .side-desc{
+        display: none; /* su mobile la descrizione “a destra” sparisce */
       }
     }
   </style>
@@ -208,15 +253,39 @@
     </div>
   </div>
 
-  <div class="portfolio">
-    <h2>Progetti</h2>
-    <ol>
-      <li>Autoritratto2D</li>
-      <li>Autoritratto3D</li>
-      <li>Esercizio 3</li>
-      <li>Esercizio 4</li>
-      <li>Esercizio 5</li>
-    </ol>
+  <!-- SOTTO: sinistra progetti, destra descrizione futura -->
+  <div class="below">
+
+    <div class="portfolio">
+      <h2>Progetti</h2>
+
+      <ol>
+        <li><a href="#autoritratto2d">Autoritratto2D</a></li>
+        <li><a href="#autoritratto3d">Autoritratto3D</a></li>
+        <li>Esercizio 3</li>
+        <li>Esercizio 4</li>
+        <li>Esercizio 5</li>
+      </ol>
+
+      <section class="project" id="autoritratto2d">
+        <h3>Autoritratto2D</h3>
+        <div class="embed">
+          <iframe src="Autoritratto2D/index.html" title="Autoritratto 2D" loading="lazy"></iframe>
+        </div>
+      </section>
+
+      <section class="project" id="autoritratto3d">
+        <h3>Autoritratto3D</h3>
+        <div class="embed">
+          <iframe src="Autoritratto3D/index.html" title="Autoritratto 3D" loading="lazy"></iframe>
+        </div>
+      </section>
+    </div>
+
+    <div class="side-desc">
+      <!-- QUI CI METTERAI LA DESCRIZIONE A DESTRA -->
+    </div>
+
   </div>
 
 </body>
