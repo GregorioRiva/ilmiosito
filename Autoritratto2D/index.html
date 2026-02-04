@@ -43,14 +43,16 @@ const IMAGE_EDGE_FADE = 55;
 const SPRING = 0.035;
 const DAMPING = 0.86;
 const MAG_RADIUS = 220;
-const MAG_FORCE  = 2.7;
-const FLOW = 0.45;
+
+// ✅ magnete: “giusto” (più forte della versione soft, ma controllato)
+const MAG_FORCE  = 1.85;   // (era 1.25 soft, originale 2.7)
+const FLOW       = 0.30;   // (era 0.22 soft, originale 0.45)
+const MAG_CAP    = 0.42;   // cap più alto: torna più presenza senza strappo
 
 function preload(){ img = loadImage("gr.png"); }
 
 function setup(){
   makeResponsiveCanvas();
-
   pixelDensity(1);
 
   img.resize(floor(img.width / RESIZE_DIV), 0);
@@ -65,8 +67,6 @@ function windowResized(){
 }
 
 function makeResponsiveCanvas(){
-  // iframe in home è quadrato (aspect-ratio: 1/1),
-  // quindi usiamo un canvas quadrato che entra sempre.
   const s = min(windowWidth, windowHeight);
   createCanvas(s, s);
 }
@@ -78,15 +78,12 @@ function buildDots(){
   const cols = floor((w - 1) / SAMPLE) + 1;
   const rows = floor((h - 1) / SAMPLE) + 1;
 
-  // dimensioni teoriche della griglia (prima della scala)
   const renderW = (cols - 1) * SPACING;
   const renderH = (rows - 1) * SPACING;
 
-  // ✅ scala per far entrare tutto nel canvas (con un piccolo margine)
   const margin = 0.92;
   const s = min((width * margin) / renderW, (height * margin) / renderH);
 
-  // centro canvas
   const cx = width / 2;
   const cy = height / 2;
 
@@ -106,7 +103,6 @@ function buildDots(){
       const g01 = pow(constrain(gray / 255, 0, 1), GAMMA) * 1.85;
       const d0 = lerp(MIN_DOT, MAX_DOT, g01);
 
-      // posizione “centrata” + scalata (mai fuori canvas)
       const localX = (ii * SPACING - renderW / 2) * s;
       const localY = (jj * SPACING - renderH / 2) * s;
 
@@ -121,7 +117,7 @@ function buildDots(){
         x: hx, y: hy,
         vx: 0, vy: 0,
         gray,
-        d0: d0 * s,       // ✅ scala anche il diametro
+        d0: d0 * s,
         edgeFade
       });
 
@@ -148,16 +144,30 @@ function draw(){
 
       if (r2 < MAG_RADIUS*MAG_RADIUS){
         const dist = sqrt(r2) + 1e-6;
+
+        // falloff morbido
         let t = 1 - dist / MAG_RADIUS;
         t = t * t * (3 - 2 * t);
 
         const nx = dx / dist, ny = dy / dist;
 
-        ax += nx * MAG_FORCE * t;
-        ay += ny * MAG_FORCE * t;
+        // componente magnete + swirl
+        let mxAx = nx * MAG_FORCE * t;
+        let mxAy = ny * MAG_FORCE * t;
 
-        ax += -ny * FLOW * t;
-        ay +=  nx * FLOW * t;
+        mxAx += -ny * FLOW * t;
+        mxAy +=  nx * FLOW * t;
+
+        // cap massimo per evitare “strappo”
+        const m = sqrt(mxAx*mxAx + mxAy*mxAy);
+        if (m > MAG_CAP){
+          const k = MAG_CAP / m;
+          mxAx *= k;
+          mxAy *= k;
+        }
+
+        ax += mxAx;
+        ay += mxAy;
       }
     }
 
