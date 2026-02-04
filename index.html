@@ -38,14 +38,14 @@
     /* ===== TOP ===== */
     .top{
       display: grid;
-      grid-template-columns: 1fr var(--rightCol);
-      gap: var(--gap);
+      grid-template-columns: 1fr 640px;
+      gap: 30px;
       align-items: start;
       margin-bottom: 80px;
     }
 
     .right{
-      height: calc(var(--tile) * 3);
+      height: 270px;
       display: flex;
       flex-direction: column;
       padding-top: 20px;
@@ -55,10 +55,8 @@
     .desc{
       font-size: 17px;
       line-height: 1.55;
-      white-space: nowrap;
     }
 
-    /* ===== SOCIAL ===== */
     .social{
       margin-top: auto;
       transform: translateY(-13px);
@@ -67,88 +65,60 @@
       column-gap: 28px;
       row-gap: 6px;
       font-size: 17px;
-      line-height: 1.55;
       white-space: nowrap;
     }
 
     /* ===== SCACCHIERA ===== */
-    .dock-grid{
-      display: grid;
-      padding-left: 10px;
-    }
-
+    .dock-grid{ padding-left: 10px; }
     .dock-grid .row{ display: flex; }
 
     .letter{
-      width: var(--tile);
-      height: var(--tile);
+      width: 90px;
+      height: 90px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: black;
-      transition: background-color 180ms ease;
     }
 
     .char{
       font-size: 42px;
       font-weight: 700;
-      line-height: 1;
       color: white;
-      transition: transform 180ms ease, color 180ms ease;
     }
 
-    .letter:hover{ background: white; }
-
-    .letter:hover .char{
-      color: black;
-      transform: scale(1.6);
-    }
-
-    /* ===== BLOCCO SOTTO (stessa griglia del TOP) ===== */
+    /* ===== BLOCCO SOTTO ===== */
     .below{
       display: grid;
-      grid-template-columns: 1fr var(--rightCol);
-      gap: var(--gap);
+      grid-template-columns: 1fr 640px;
+      gap: 30px;
       align-items: start;
     }
 
-    /* ===== PORTFOLIO (SINISTRA) ===== */
+    /* ===== PORTFOLIO ===== */
     .portfolio{
-      grid-column: 1;
-      padding-left: calc(10px + var(--exerciseOffset));
+      padding-left: 38px;
       max-width: 560px;
     }
 
     .portfolio h2{
       margin: 0 0 14px 0;
       font-size: 26px;
-      font-weight: 700;
     }
 
     .portfolio ol{
-      margin: 0 0 70px 0;   /* ✅ più spazio tra indice e progetti */
+      margin: 0 0 70px 0;
       padding-left: 0;
       list-style-position: inside;
       font-size: 19px;
-      line-height: 1.55;
     }
 
-    .portfolio li{ margin-bottom: 8px; }
-
-    /* ✅ più spazio tra i progetti */
     .project{
       margin-top: 72px;
     }
 
-    /* evita troppo spazio sopra il primo progetto */
     .project:first-of-type{
       margin-top: 0;
-    }
-
-    .project h3{
-      margin: 0 0 14px 0;
-      font-size: 20px;
-      font-weight: 700;
     }
 
     .embed{
@@ -156,59 +126,50 @@
       aspect-ratio: 1 / 1;
       overflow: hidden;
       background: black;
-      margin-bottom: 20px; /* ✅ un po’ di respiro sotto iframe */
+      margin-bottom: 20px;
     }
 
     .embed iframe{
       width: 100%;
       height: 100%;
       border: 0;
-      display: block;
     }
 
-    /* ===== COLONNA DESTRA (per descrizione futura) ===== */
+    /* ===== DESCRIZIONI ===== */
     .side-desc{
-      grid-column: 2;
-      padding-top: 0;
+      position: relative;
+    }
+
+    .side-text{
+      position: absolute;
+      width: 100%;
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    .side-text h4{
+      margin: 0 0 6px 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .side-text p{
+      margin-bottom: 22px;
     }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px){
-      body{ margin: 24px; }
-
-      .top{
-        grid-template-columns: 1fr;
-        gap: 30px;
-        margin-bottom: 40px;
-      }
-
-      .right{
-        height: auto;
-        padding-top: 0;
-      }
-
-      .desc{ white-space: normal; }
-
-      .social{
-        margin-top: 14px;
-        transform: none;
-        grid-template-columns: 1fr;
-        column-gap: 0;
-        white-space: normal;
-      }
-
+      .top,
       .below{
         grid-template-columns: 1fr;
-        gap: 30px;
-      }
-
-      .portfolio{
-        padding-left: 0;
-        max-width: none;
       }
 
       .side-desc{
         display: none;
+      }
+
+      body{
+        margin: 24px;
       }
     }
   </style>
@@ -217,7 +178,6 @@
 <body>
 
   <div class="top">
-    <!-- SINISTRA -->
     <div class="left">
       <div class="dock-grid">
         <div class="row">
@@ -241,7 +201,6 @@
       </div>
     </div>
 
-    <!-- DESTRA -->
     <div class="right">
       <p class="desc">
         Mi chiamo Gregorio, ma potete chiamarmi Greg!<br>
@@ -252,14 +211,12 @@
       <div class="social">
         <a href="#">Instagram</a>
         <a href="#">Email personale</a>
-
         <a href="#">GitHub</a>
         <a href="#">Email SUPSI</a>
       </div>
     </div>
   </div>
 
-  <!-- SOTTO: sinistra progetti, destra descrizione futura -->
   <div class="below">
 
     <div class="portfolio">
@@ -268,31 +225,69 @@
       <ol>
         <li><a href="#autoritratto2d">Autoritratto2D</a></li>
         <li><a href="#autoritratto3d">Autoritratto3D</a></li>
-        <li>Esercizio 3</li>
-        <li>Esercizio 4</li>
-        <li>Esercizio 5</li>
       </ol>
 
       <section class="project" id="autoritratto2d">
-        <h3>Autoritratto2D</h3>
         <div class="embed">
-          <iframe src="Autoritratto2D/index.html" title="Autoritratto 2D" loading="lazy"></iframe>
+          <iframe src="Autoritratto2D/index.html"></iframe>
         </div>
       </section>
 
       <section class="project" id="autoritratto3d">
-        <h3>Autoritratto3D</h3>
         <div class="embed">
-          <iframe src="Autoritratto3D/index.html" title="Autoritratto 3D" loading="lazy"></iframe>
+          <iframe src="Autoritratto3D/index.html"></iframe>
         </div>
       </section>
     </div>
 
     <div class="side-desc">
-      <!-- QUI CI METTERAI LA DESCRIZIONE A DESTRA -->
+
+      <div class="side-text" data-target="autoritratto2d">
+        <h4>Autoritratto2D</h4>
+        <p>
+          Un autoritratto bidimensionale derivato da una fotografia personale,
+          convertita in bianco e nero e analizzata a livello di pixel.
+          Ogni pixel viene trasformato in un punto, generando una trama puntinata
+          deformata da un sistema di forze simile a una calamita virtuale.
+        </p>
+      </div>
+
+      <div class="side-text" data-target="autoritratto3d">
+        <h4>Autoritratto3D</h4>
+        <p>
+          Un autoritratto tridimensionale generato attraverso regole procedurali.
+          La forma si sviluppa nello spazio come struttura dinamica,
+          variabile nel tempo e potenzialmente reattiva all’interazione.
+        </p>
+      </div>
+
     </div>
 
   </div>
+
+  <script>
+    function alignDescriptions(){
+      const OFFSET = 84;
+      const side = document.querySelector('.side-desc');
+
+      document.querySelectorAll('.side-text').forEach(desc=>{
+        const target = document.getElementById(desc.dataset.target);
+        const embed = target.querySelector('.embed');
+
+        const yEmbed = embed.getBoundingClientRect().top;
+        const ySide = side.getBoundingClientRect().top;
+
+        desc.style.top = (yEmbed - ySide + OFFSET) + 'px';
+      });
+
+      side.style.minHeight =
+        document.querySelector('.portfolio').offsetHeight + 'px';
+    }
+
+    window.addEventListener('load', alignDescriptions);
+    window.addEventListener('resize', alignDescriptions);
+    window.addEventListener('scroll', alignDescriptions, { passive:true });
+  </script>
 
 </body>
 </html>
