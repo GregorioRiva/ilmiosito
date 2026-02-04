@@ -10,10 +10,10 @@
       --tile: 90px;
       --gap: 30px;
       --rightCol: 640px;
-      --exerciseOffset: 28px; /* (tenuta, anche se ora non usata) */
+      --exerciseOffset: 28px;
     }
 
-    * { box-sizing: border-box; }
+    *{ box-sizing: border-box; }
 
     body{
       font-family: Helvetica, Arial, sans-serif;
@@ -69,7 +69,7 @@
       white-space: nowrap;
     }
 
-    /* ===== SCACCHIERA ===== */
+    /* ===== SCACCHIERA (IDENTICA + HOVER CORRETTO) ===== */
     .dock-grid{ padding-left: 10px; }
     .dock-grid .row{ display: flex; }
 
@@ -79,14 +79,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: black;
+      background: black;          /* default */
+      cursor: pointer;
+      transition: background 150ms ease;
     }
 
     .char{
-      font-size: 42px;
-      font-weight: 700;
-      color: white;
-    }
+  font-size: 42px;
+  font-weight: 700;
+  color: white;
+  user-select: none;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+/* hover: sfondo bianco + lettera nera + lettera leggermente più grande */
+.letter:hover{
+  background: white;
+}
+.letter:hover .char{
+  color: black;
+  transform: scale(1.5); /* 👈 ingrandisce SOLO la lettera */
+}
+
 
     /* ===== BLOCCO SOTTO ===== */
     .below{
@@ -114,13 +128,8 @@
       font-size: 19px;
     }
 
-    .project{
-      margin-top: 200px;
-    }
-
-    .project:first-of-type{
-      margin-top: 0;
-    }
+    .project{ margin-top: 200px; }
+    .project:first-of-type{ margin-top: 0; }
 
     .embed{
       width: 100%;
@@ -138,9 +147,7 @@
     }
 
     /* ===== DESCRIZIONI ===== */
-    .side-desc{
-      position: relative;
-    }
+    .side-desc{ position: relative; }
 
     .side-text{
       position: absolute;
@@ -155,24 +162,13 @@
       font-weight: 700;
     }
 
-    .side-text p{
-      margin-bottom: 22px;
-    }
+    .side-text p{ margin-bottom: 22px; }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px){
-      .top,
-      .below{
-        grid-template-columns: 1fr;
-      }
-
-      .side-desc{
-        display: none;
-      }
-
-      body{
-        margin: 24px;
-      }
+      .top, .below{ grid-template-columns: 1fr; }
+      .side-desc{ display: none; }
+      body{ margin: 24px; }
     }
   </style>
 </head>
@@ -211,10 +207,10 @@
       </p>
 
       <div class="social">
-        <a href="#" aria-label="Instagram">Instagram</a>
-        <a href="#" aria-label="Email personale">Email personale</a>
-        <a href="#" aria-label="GitHub">GitHub</a>
-        <a href="#" aria-label="Email SUPSI">Email SUPSI</a>
+        <a href="https://www.instagram.com/g.orilla.art/">Instagram</a>
+        <a href="greg.riva@bluewin.ch">Email personale</a>
+        <a href="https://github.com/GregorioRiva">GitHub</a>
+        <a href="gregorio.riva@student.supsi.ch">Email SUPSI</a>
       </div>
     </div>
   </div>
@@ -231,13 +227,13 @@
 
       <section class="project" id="autoritratto2d">
         <div class="embed">
-          <iframe src="Autoritratto2D/index.html" title="Autoritratto2D"></iframe>
+          <iframe src="Autoritratto2D/index.html"></iframe>
         </div>
       </section>
 
       <section class="project" id="autoritratto3d">
         <div class="embed">
-          <iframe src="Autoritratto3D/index.html" title="Autoritratto3D"></iframe>
+          <iframe src="Autoritratto3D/index.html"></iframe>
         </div>
       </section>
     </div>
@@ -271,7 +267,6 @@
   function docTop(el) {
     return el.getBoundingClientRect().top + window.scrollY;
   }
-
   function docBottom(el) {
     const r = el.getBoundingClientRect();
     return r.bottom + window.scrollY;
@@ -281,7 +276,7 @@
     const sideDesc = document.querySelector('.side-desc');
     if (!sideDesc) return;
 
-    const OFFSET = -200; // negativo = più su, positivo = più giù
+    const OFFSET = -200;
     const sideTop = docTop(sideDesc);
 
     document.querySelectorAll('.side-text').forEach(desc => {
@@ -299,7 +294,6 @@
     if (portfolio) sideDesc.style.minHeight = portfolio.offsetHeight + 'px';
   }
 
-  // rAF throttle (scroll/resize)
   let ticking = false;
   function requestAlign() {
     if (ticking) return;
@@ -312,8 +306,6 @@
 
   window.addEventListener('load', () => {
     alignDescriptions();
-
-    // riallinea quando ogni iframe finisce di caricare
     document.querySelectorAll('.embed iframe').forEach(f => {
       f.addEventListener('load', requestAlign);
     });
