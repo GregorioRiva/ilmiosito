@@ -1,28 +1,24 @@
-let pg;
-let a = 0;
-
 function setup() {
-  createCanvas(400, 400);
-  pg = createGraphics(400, 400);
-
-  pg.textFont("Helvetica");
-  pg.textSize(36);
-  pg.textAlign(CENTER, CENTER);
+	createCanvas(400, 400)
+	background(200)
 }
 
-function draw() {
-  pg.background(220);
-  pg.fill(255, 0, 0);
-  pg.text("GR", pg.width / 2, pg.height / 2);
+function draw(){
 
-  background(220);
 
-  push();
-  translate(width / 2, height / 2);
-  rotate(a);
-  imageMode(CENTER);
-  image(pg, 0, 0, width, height);
-  pop();
+	fill(random(255), random(255), random(255))
+	textSize(136)
+	textAlign(CENTER, CENTER)
+	// textFont('Courier New')
+	text("AG", width/2, height/2)
 
-  a += 0.02;
+	let c = get(0, 0, width, height)
+
+
+	translate(width/2, height/2)
+	rotate(mouseX * 0.001)
+	imageMode(CENTER)
+	image(c, mouseX * 0.1, mouseY * 0.1, c.width * 1.1, c.height * 1.1)
+
+
 }
