@@ -10,8 +10,10 @@
       --tile: 90px;
       --gap: 30px;
       --rightCol: 640px;
-      --exerciseOffset: 28px;
+      --exerciseOffset: 28px; /* (tenuta, anche se ora non usata) */
     }
+
+    * { box-sizing: border-box; }
 
     body{
       font-family: Helvetica, Arial, sans-serif;
@@ -38,8 +40,8 @@
     /* ===== TOP ===== */
     .top{
       display: grid;
-      grid-template-columns: 1fr 640px;
-      gap: 30px;
+      grid-template-columns: 1fr var(--rightCol);
+      gap: var(--gap);
       align-items: start;
       margin-bottom: 80px;
     }
@@ -49,7 +51,6 @@
       display: flex;
       flex-direction: column;
       padding-top: 20px;
-      box-sizing: border-box;
     }
 
     .desc{
@@ -73,8 +74,8 @@
     .dock-grid .row{ display: flex; }
 
     .letter{
-      width: 90px;
-      height: 90px;
+      width: var(--tile);
+      height: var(--tile);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -90,8 +91,8 @@
     /* ===== BLOCCO SOTTO ===== */
     .below{
       display: grid;
-      grid-template-columns: 1fr 640px;
-      gap: 30px;
+      grid-template-columns: 1fr var(--rightCol);
+      gap: var(--gap);
       align-items: start;
     }
 
@@ -114,7 +115,7 @@
     }
 
     .project{
-      margin-top: 72px;
+      margin-top: 200px;
     }
 
     .project:first-of-type{
@@ -133,6 +134,7 @@
       width: 100%;
       height: 100%;
       border: 0;
+      display: block;
     }
 
     /* ===== DESCRIZIONI ===== */
@@ -209,10 +211,10 @@
       </p>
 
       <div class="social">
-        <a href="#">Instagram</a>
-        <a href="#">Email personale</a>
-        <a href="#">GitHub</a>
-        <a href="#">Email SUPSI</a>
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="Email personale">Email personale</a>
+        <a href="#" aria-label="GitHub">GitHub</a>
+        <a href="#" aria-label="Email SUPSI">Email SUPSI</a>
       </div>
     </div>
   </div>
@@ -229,13 +231,13 @@
 
       <section class="project" id="autoritratto2d">
         <div class="embed">
-          <iframe src="Autoritratto2D/index.html"></iframe>
+          <iframe src="Autoritratto2D/index.html" title="Autoritratto2D"></iframe>
         </div>
       </section>
 
       <section class="project" id="autoritratto3d">
         <div class="embed">
-          <iframe src="Autoritratto3D/index.html"></iframe>
+          <iframe src="Autoritratto3D/index.html" title="Autoritratto3D"></iframe>
         </div>
       </section>
     </div>
@@ -265,29 +267,61 @@
 
   </div>
 
-  <script>
-    function alignDescriptions(){
-      const OFFSET = 84;
-      const side = document.querySelector('.side-desc');
+<script>
+  function docTop(el) {
+    return el.getBoundingClientRect().top + window.scrollY;
+  }
 
-      document.querySelectorAll('.side-text').forEach(desc=>{
-        const target = document.getElementById(desc.dataset.target);
-        const embed = target.querySelector('.embed');
+  function docBottom(el) {
+    const r = el.getBoundingClientRect();
+    return r.bottom + window.scrollY;
+  }
 
-        const yEmbed = embed.getBoundingClientRect().top;
-        const ySide = side.getBoundingClientRect().top;
+  function alignDescriptions() {
+    const sideDesc = document.querySelector('.side-desc');
+    if (!sideDesc) return;
 
-        desc.style.top = (yEmbed - ySide + OFFSET) + 'px';
-      });
+    const OFFSET = -200; // negativo = più su, positivo = più giù
+    const sideTop = docTop(sideDesc);
 
-      side.style.minHeight =
-        document.querySelector('.portfolio').offsetHeight + 'px';
-    }
+    document.querySelectorAll('.side-text').forEach(desc => {
+      const target = document.getElementById(desc.dataset.target);
+      if (!target) return;
 
-    window.addEventListener('load', alignDescriptions);
-    window.addEventListener('resize', alignDescriptions);
-    window.addEventListener('scroll', alignDescriptions, { passive:true });
-  </script>
+      const iframe = target.querySelector('.embed iframe');
+      if (!iframe) return;
+
+      const y = docBottom(iframe) - sideTop + OFFSET;
+      desc.style.top = y + 'px';
+    });
+
+    const portfolio = document.querySelector('.portfolio');
+    if (portfolio) sideDesc.style.minHeight = portfolio.offsetHeight + 'px';
+  }
+
+  // rAF throttle (scroll/resize)
+  let ticking = false;
+  function requestAlign() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      alignDescriptions();
+      ticking = false;
+    });
+  }
+
+  window.addEventListener('load', () => {
+    alignDescriptions();
+
+    // riallinea quando ogni iframe finisce di caricare
+    document.querySelectorAll('.embed iframe').forEach(f => {
+      f.addEventListener('load', requestAlign);
+    });
+  });
+
+  window.addEventListener('resize', requestAlign);
+  window.addEventListener('scroll', requestAlign, { passive: true });
+</script>
 
 </body>
 </html>
