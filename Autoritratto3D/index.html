@@ -27,8 +27,6 @@
     }
   </style>
 
-  <!-- ✅ Permette agli import di "three" di funzionare nel browser
-       (GitHub Pages, senza strumenti di build) -->
   <script type="importmap">
   {
     "imports": {
@@ -48,21 +46,17 @@
     import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
     import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 
-    // ---------- File (devono trovarsi nella STESSA cartella di questo index.html) ----------
     const MODEL_OBJ = "3d_image.obj";
     const MODEL_MTL = "3d_image.mtl";
 
-    // ---------- Renderer ----------
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // ---------- Scena ----------
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
-    // ---------- Camera ----------
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
@@ -71,34 +65,75 @@
     );
     camera.position.set(0, 0.1, 2.0);
 
-    // ---------- Controlli ----------
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.rotateSpeed = 0.6;
 
-    // ✅ Rotazione orizzontale completa
     controls.minAzimuthAngle = -Infinity;
     controls.maxAzimuthAngle =  Infinity;
 
-    // ✅ permette di guardare verso l’alto; ❌ blocca la vista dal basso (sottoscocca)
     controls.minPolarAngle = 0;
     controls.maxPolarAngle = Math.PI / 2;
 
-    // Limiti opzionali dello zoom (modifica se necessario)
-    // controls.minDistance = 1.0;
-    // controls.maxDistance = 5.0;
-
-    // ---------- Luci ----------
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-
     const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
     dirLight.position.set(2, 3, 2);
     scene.add(dirLight);
 
-    // ---------- Loader ----------
     const mtlLoader = new MTLLoader().setPath("./");
     const objLoader = new OBJLoader().setPath("./");
+
+    let loadedObj = null;
+
+    // ====== FIT-TO-VIEW (incastra tra margini sx/dx) ======
+    const PADDING = 1.12; // ↑ più alto = più “aria”, ↓ più basso = più vicino ai bordi
+
+    function fitObjectToView(obj) {
+      // box / size / center
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = new THREE.Vector3();
+      const center = new THREE.Vector3();
+      box.getSize(size);
+      box.getCenter(center);
+
+      // centra davvero (anche se l'oggetto ha pivot strano)
+      obj.position.sub(center);
+      obj.updateWorldMatrix(true, true);
+
+      // ricalcola box dopo il centraggio
+      const box2 = new THREE.Box3().setFromObject(obj);
+      const size2 = new THREE.Vector3();
+      box2.getSize(size2);
+
+      // calcolo distanza necessaria a “contenere” l’oggetto in camera
+      const aspect = window.innerWidth / window.innerHeight;
+
+      const fov = THREE.MathUtils.degToRad(camera.fov);
+      const height = size2.y;
+      const width  = size2.x;
+
+      // distanza per far stare altezza e larghezza (considerando aspect e fov)
+      const distForHeight = (height * PADDING) / (2 * Math.tan(fov / 2));
+      const distForWidth  = (width  * PADDING) / (2 * Math.tan(fov / 2) * aspect);
+
+      const dist = Math.max(distForHeight, distForWidth);
+
+      // metti camera e target in modo pulito
+      controls.target.set(0, 0, 0);
+
+      // tieni un pochino di “alzata” come avevi tu, ma senza sballare il fit
+      camera.position.set(0, 0.08, dist);
+      camera.near = Math.max(0.001, dist / 100);
+      camera.far  = dist * 100;
+      camera.updateProjectionMatrix();
+
+      // limiti zoom comodi (opzionali, ma utili)
+      controls.minDistance = dist * 0.5;
+      controls.maxDistance = dist * 3.0;
+
+      controls.update();
+    }
 
     // ---------- Carica MTL poi OBJ ----------
     mtlLoader.load(
@@ -110,23 +145,9 @@
         objLoader.load(
           MODEL_OBJ,
           (obj) => {
-            // Centra e ridimensiona l’oggetto per adattarlo bene alla scena
-            const box = new THREE.Box3().setFromObject(obj);
-            const size = new THREE.Vector3();
-            const center = new THREE.Vector3();
-            box.getSize(size);
-            box.getCenter(center);
-
-            obj.position.sub(center);
-
-            const maxDim = Math.max(size.x, size.y, size.z);
-            const scale = 1.2 / maxDim;
-            obj.scale.setScalar(scale);
-
+            loadedObj = obj;
             scene.add(obj);
-
-            controls.target.set(0, 0, 0);
-            controls.update();
+            fitObjectToView(obj); // <-- QUI lo incastri subito
           },
           undefined,
           (err) => console.error("Errore nel caricamento OBJ:", err)
@@ -136,7 +157,6 @@
       (err) => console.error("Errore nel caricamento MTL:", err)
     );
 
-    // ---------- Ciclo di rendering ----------
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
@@ -144,15 +164,16 @@
     }
     animate();
 
-    // ---------- Ridimensionamento ----------
     window.addEventListener("resize", () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
 
       renderer.setSize(w, h);
-
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+
+      // rifit al resize per mantenere l’“incastro” tra margini
+      if (loadedObj) fitObjectToView(loadedObj);
     });
   </script>
 </body>
