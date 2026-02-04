@@ -1,27 +1,13 @@
-let c;
-
-function setup() {
-  createCanvas(400, 400);
-  textFont("Helvetica");
-  textSize(36);
-  textAlign(CENTER, CENTER);
-}
-
-function draw() {
-  background(220);
-
-  fill(255, 0, 0);
-  text("GR", width / 2, height / 2);
-
-  // aggiorna la "foto" solo ogni 3 frame (molto più leggero)
-  if (frameCount % 3 === 0) c = get();
-
-  if (c) {
-    push();
-    translate(width / 2, height / 2);
-    rotate(0.1);
-    imageMode(CENTER);
-    image(c, 0, 0, width, height);
-    pop();
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	Hello World
+	<script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+	<script src="sketch.js"></script>
+</body>
+</html>
