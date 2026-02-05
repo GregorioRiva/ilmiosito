@@ -9,17 +9,28 @@
     :root{
       --tile: 90px;
       --gap: 30px;
-      --rightCol: 640px;
-      --exerciseOffset: 28px;
+      --colMax: 480px;
+      --colMin: 360px;
+      --portfolioPadL: 38px;
+      --gridPadL: 10px;
+
+      /* allineamento social = altezza riga "RIVA" (tarabile) */
+      --socialTop: calc(20px + (var(--tile) * 2) - 10px);
+
+      /* distanza tra social e titoli progetti (tarabile) */
+      --projectsGap: 260px;
+
+      --projRowGap: 10px;
+      --projColGap: 10px;
     }
 
     *{ box-sizing: border-box; }
 
     body{
+      margin: 28px 36px 24px;
+      background: #000;
+      color: #fff;
       font-family: Helvetica, Arial, sans-serif;
-      margin: 40px;
-      background: black;
-      color: white;
       font-size: 16.5px;
       line-height: 1.5;
     }
@@ -27,51 +38,117 @@
     p{ margin: 0; }
 
     a{
-      color: white;
+      color: inherit;
       text-decoration: none;
       transition: opacity 150ms ease, transform 150ms ease;
     }
-
     a:hover{
       opacity: 0.6;
       transform: translateX(2px);
     }
 
-    /* ===== TOP ===== */
-    .top{
+    /* ===== LAYOUT ===== */
+    .top,
+    .below{
       display: grid;
-      grid-template-columns: 1fr var(--rightCol);
+      grid-template-columns: 1fr minmax(var(--colMin), var(--colMax));
       gap: var(--gap);
       align-items: start;
-      margin-bottom: 80px;
     }
 
+    .top{
+      position: relative;
+      z-index: 2;
+      margin-bottom: 42px;
+    }
+
+    .below{
+      position: relative;
+      z-index: 1;
+      align-items: start;
+    }
+
+    /* ===== COLONNA DESTRA (bio + social + link progetti) ===== */
     .right{
-      height: 270px;
-      display: flex;
-      flex-direction: column;
       padding-top: 20px;
+      position: relative;                /* ✅ serve per ancorare social e titoli */
+      min-height: calc(var(--tile) * 3); /* altezza scacchiera */
+      overflow: visible;
     }
 
     .desc{
+      margin-top: 6px;
       font-size: 17px;
       line-height: 1.55;
-      margin-top: 6px;
     }
 
+    /* ===== SOCIAL (DESKTOP: assoluti, quindi NON scendono “da soli”) ===== */
     .social{
-      margin-top: auto;
-      transform: translateY(-13px);
+      position: absolute;
+      top: var(--socialTop);
+      left: 0;
+
       display: grid;
       grid-template-columns: auto auto;
-      column-gap: 28px;
-      row-gap: 6px;
+      column-gap: 4px;
+      row-gap: 0;
       font-size: 17px;
       white-space: nowrap;
     }
 
-    /* ===== SCACCHIERA (IDENTICA + HOVER CORRETTO) ===== */
-    .dock-grid{ padding-left: 10px; }
+    /* override hover globale: qui niente shift/fade */
+    .social a{
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px 0 8px;
+
+      opacity: 1;
+      transform: none;
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .social a:hover{
+      opacity: 1;
+      transform: none;
+      background: #fff;
+      color: #000;
+    }
+
+    /* ===== TITOLI PROGETTI (DESKTOP: assoluti) ===== */
+    .top-projects{
+      position: absolute;
+      top: calc(var(--socialTop) + var(--projectsGap));
+      left: 0;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--projColGap);
+      row-gap: var(--projRowGap);
+      font-size: 17px;
+      white-space: nowrap;
+
+      z-index: 3;
+    }
+
+    .top-projects a{
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px 0 8px;
+
+      opacity: 1;
+      transform: none;
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .top-projects a:hover{
+      opacity: 1;
+      transform: none;
+      background: #fff;
+      color: #000;
+    }
+
+    /* ===== SCACCHIERA ===== */
+    .dock-grid{ padding-left: var(--gridPadL); }
     .dock-grid .row{ display: flex; }
 
     .letter{
@@ -80,7 +157,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: black;          /* default */
+      background: #000;
       cursor: pointer;
       transition: background 150ms ease;
     }
@@ -88,45 +165,24 @@
     .char{
       font-size: 42px;
       font-weight: 700;
-      color: white;
+      color: #fff;
       user-select: none;
       transition: color 150ms ease, transform 150ms ease;
     }
 
-    /* hover: sfondo bianco + lettera nera + lettera leggermente più grande */
-    .letter:hover{
-      background: white;
-    }
+    .letter:hover{ background: #fff; }
     .letter:hover .char{
-      color: black;
-      transform: scale(1.5); /* 👈 ingrandisce SOLO la lettera */
-    }
-
-    /* ===== BLOCCO SOTTO ===== */
-    .below{
-      display: grid;
-      grid-template-columns: 1fr var(--rightCol);
-      gap: var(--gap);
-      align-items: start;
+      color: #000;
+      transform: scale(1.5);
     }
 
     /* ===== PORTFOLIO ===== */
     .portfolio{
-      padding-left: 38px;
-      max-width: 560px;
+      padding-left: var(--portfolioPadL);
+      max-width: none;
     }
 
-    .portfolio h2{
-      margin: 0 0 14px 0;
-      font-size: 26px;
-    }
-
-    .portfolio ol{
-      margin: 0 0 70px 0;
-      padding-left: 0;
-      list-style-position: inside;
-      font-size: 19px;
-    }
+    html{ scroll-behavior: smooth; }
 
     .project{ margin-top: 200px; }
     .project:first-of-type{ margin-top: 0; }
@@ -135,8 +191,8 @@
       width: 100%;
       aspect-ratio: 1 / 1;
       overflow: hidden;
-      background: black;
-      margin-bottom: 20px;
+      background: #000;
+      margin-bottom: 18px;
     }
 
     .embed iframe{
@@ -146,7 +202,7 @@
       display: block;
     }
 
-    /* ===== DESCRIZIONI ===== */
+    /* ===== DESCRIZIONI A DESTRA (desktop) ===== */
     .side-desc{ position: relative; }
 
     .side-text{
@@ -157,24 +213,92 @@
     }
 
     .side-text h4{
-      margin: 0 0 6px 0;
+      margin: 0 0 6px;
       font-size: 17px;
       font-weight: 700;
     }
 
     .side-text p{ margin-bottom: 22px; }
 
+    /* ===== DESCRIZIONI MOBILE (sotto ogni progetto) ===== */
+    .mobile-desc{ display: none; }
+    .mobile-desc h4{
+      margin: 0 0 6px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .mobile-desc p{
+      margin: 0 0 26px;
+      font-size: 17px;
+      line-height: 1.55;
+      max-width: 60ch;
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px){
+      body{ margin: 18px; }
+
       .top, .below{ grid-template-columns: 1fr; }
+      .portfolio{ padding-left: 0; }
+
+      /* ✅ su mobile NON assoluti: tutto in colonna */
+      .social,
+      .top-projects{
+        position: static;
+        top: auto;
+        left: auto;
+      }
+
+      .right{ min-height: auto; padding-top: 18px; }
+
+      /* ✅ niente bordi/tondi */
+      .social{
+        margin-top: 14px;
+        grid-template-columns: 1fr;
+        row-gap: 8px;
+        white-space: normal;
+      }
+      .social a{
+        height: auto;
+        padding: 0;
+        display: inline;
+        background: none;
+        color: inherit;
+      }
+      .social a:hover{
+        background: none;
+        color: inherit;
+        opacity: 0.6;
+      }
+
+      .top-projects{
+        margin-top: 14px;
+        grid-template-columns: 1fr;
+        row-gap: 8px;
+        white-space: normal;
+      }
+      .top-projects a{
+        height: auto;
+        padding: 0;
+        display: inline;
+        background: none;
+        color: inherit;
+      }
+      .top-projects a:hover{
+        background: none;
+        color: inherit;
+        opacity: 0.6;
+      }
+
       .side-desc{ display: none; }
-      body{ margin: 24px; }
+      .mobile-desc{ display: block; }
+
+      .project{ margin-top: 56px; }
     }
   </style>
 </head>
 
 <body>
-
   <div class="top">
     <div class="left">
       <div class="dock-grid">
@@ -202,34 +326,40 @@
     <div class="right">
       <p class="desc">
         Mi chiamo Gregorio, ma potete chiamarmi Greg!<br>
-        Sono uno studente di comunicazione visiva alla SUPSI/DACD di Mendrisio.<br>
+        Studio comunicazione visiva alla SUPSI/DACD di Mendrisio.
         Questo sito è il mio spazio personale dove raccolgo progetti e idee in evoluzione.
       </p>
 
       <div class="social">
         <a href="https://www.instagram.com/g.orilla.art/">Instagram</a>
-        <a href="greg.riva@bluewin.ch">Email personale</a>
-        <a href="https://github.com/GregorioRiva">GitHub</a>
-        <a href="gregorio.riva@student.supsi.ch">Email SUPSI</a>
+        <a href="mailto:greg.riva@bluewin.ch">Email personale</a>
+        <a href="https://github.com/GregorioRiva">Github</a>
+        <a href="mailto:gregorio.riva@student.supsi.ch">Email SUPSI</a>
+      </div>
+
+      <div class="top-projects" aria-label="Progetti">
+        <a href="#autoritratto2d">Autoritratto 2D</a>
+        <a href="#autoritratto3d">Autoritratto 3D</a>
+        <a href="#progetto3">Caratteri in movimento</a>
+        <a href="#progetto4">Data Self-Portrait</a>
       </div>
     </div>
   </div>
 
   <div class="below">
-
     <div class="portfolio">
-      <h2>Progetti</h2>
-
-      <ol>
-        <li><a href="#autoritratto2d">Autoritratto in 2D</a></li>
-        <li><a href="#autoritratto3d">Autoritratto in 3D</a></li>
-        <li><a href="#progetto3">Caratteri in movimento</a></li>
-        <li><a href="#progetto4">Progetto4</a></li>
-      </ol>
-
       <section class="project" id="autoritratto2d">
         <div class="embed">
           <iframe src="Autoritratto2D/index.html"></iframe>
+        </div>
+        <div class="mobile-desc">
+          <h4>Autoritratto2D</h4>
+          <p>
+            Un autoritratto bidimensionale derivato da una fotografia personale,
+            convertita in bianco e nero e analizzata a livello di pixel.
+            Ogni pixel viene trasformato in un punto, generando una trama puntinata
+            deformata da un sistema di forze simile a una calamita virtuale.
+          </p>
         </div>
       </section>
 
@@ -237,11 +367,26 @@
         <div class="embed">
           <iframe src="Autoritratto3D/index.html"></iframe>
         </div>
+        <div class="mobile-desc">
+          <h4>Autoritratto3D</h4>
+          <p>
+            Un autoritratto tridimensionale generato attraverso regole procedurali.
+            La forma si sviluppa nello spazio come struttura dinamica,
+            variabile nel tempo e potenzialmente reattiva all’interazione.
+          </p>
+        </div>
       </section>
 
       <section class="project" id="progetto3">
         <div class="embed">
           <!-- iframe futuro: es. <iframe src="Progetto3/index.html"></iframe> -->
+        </div>
+        <div class="mobile-desc">
+          <h4>Caratteri in movimento</h4>
+          <p>
+            Descrizione del progetto in arrivo.
+            Spazio riservato a un lavoro futuro o in fase di sviluppo.
+          </p>
         </div>
       </section>
 
@@ -249,11 +394,17 @@
         <div class="embed">
           <!-- iframe futuro: es. <iframe src="Progetto4/index.html"></iframe> -->
         </div>
+        <div class="mobile-desc">
+          <h4>Data Self-Portrait</h4>
+          <p>
+            Descrizione del progetto in arrivo.
+            Spazio riservato a un lavoro futuro o sperimentale.
+          </p>
+        </div>
       </section>
     </div>
 
     <div class="side-desc">
-
       <div class="side-text" data-target="autoritratto2d">
         <h4>Autoritratto2D</h4>
         <p>
@@ -274,7 +425,7 @@
       </div>
 
       <div class="side-text" data-target="progetto3">
-        <h4>Progetto3</h4>
+        <h4>Caratteri in movimento</h4>
         <p>
           Descrizione del progetto in arrivo.
           Spazio riservato a un lavoro futuro o in fase di sviluppo.
@@ -282,77 +433,75 @@
       </div>
 
       <div class="side-text" data-target="progetto4">
-        <h4>Progetto4</h4>
+        <h4>Data Self-Portrait</h4>
         <p>
           Descrizione del progetto in arrivo.
           Spazio riservato a un lavoro futuro o sperimentale.
         </p>
       </div>
-
     </div>
-
   </div>
 
-<script>
-  function docTop(el) {
-    return el.getBoundingClientRect().top + window.scrollY;
-  }
-  function docBottom(el) {
-    const r = el.getBoundingClientRect();
-    return r.bottom + window.scrollY;
-  }
-
-  function alignDescriptions() {
-    const sideDesc = document.querySelector('.side-desc');
-    if (!sideDesc) return;
-
+  <script>
     const OFFSET = -200;
-    const sideTop = docTop(sideDesc);
 
-    let lastBottom = 0;
+    function docTop(el){
+      return el.getBoundingClientRect().top + window.scrollY;
+    }
+    function docBottom(el){
+      const r = el.getBoundingClientRect();
+      return r.bottom + window.scrollY;
+    }
 
-    document.querySelectorAll('.side-text').forEach(desc => {
-      const target = document.getElementById(desc.dataset.target);
-      if (!target) return;
+    function alignDescriptions(){
+      if (window.matchMedia('(max-width: 900px)').matches) return;
 
-      const iframe = target.querySelector('.embed iframe');
+      const sideDesc = document.querySelector('.side-desc');
+      if (!sideDesc) return;
 
-      let y;
+      const sideTop = docTop(sideDesc);
+      let lastBottom = 0;
 
-      if (iframe) {
-        y = docBottom(iframe) - sideTop + OFFSET;
-      } else {
-        y = lastBottom + 80; // spazio tra descrizioni senza iframe
-      }
+      document.querySelectorAll('.side-text').forEach(desc => {
+        const target = document.getElementById(desc.dataset.target);
+        if (!target) return;
 
-      desc.style.top = y + 'px';
-      lastBottom = y + desc.offsetHeight;
-    });
+        const iframe = target.querySelector('.embed iframe');
+        let y;
 
-    const portfolio = document.querySelector('.portfolio');
-    if (portfolio) sideDesc.style.minHeight = portfolio.offsetHeight + 'px';
-  }
+        if (iframe){
+          y = docBottom(iframe) - sideTop + OFFSET;
+        } else {
+          y = lastBottom + 80;
+        }
 
-  let ticking = false;
-  function requestAlign() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
+        desc.style.top = y + 'px';
+        lastBottom = y + desc.offsetHeight;
+      });
+
+      const portfolio = document.querySelector('.portfolio');
+      if (portfolio) sideDesc.style.minHeight = portfolio.offsetHeight + 'px';
+    }
+
+    let ticking = false;
+    function requestAlign(){
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        alignDescriptions();
+        ticking = false;
+      });
+    }
+
+    window.addEventListener('load', () => {
       alignDescriptions();
-      ticking = false;
+      document.querySelectorAll('.embed iframe').forEach(f => {
+        f.addEventListener('load', requestAlign);
+      });
     });
-  }
 
-  window.addEventListener('load', () => {
-    alignDescriptions();
-    document.querySelectorAll('.embed iframe').forEach(f => {
-      f.addEventListener('load', requestAlign);
-    });
-  });
-
-  window.addEventListener('resize', requestAlign);
-  window.addEventListener('scroll', requestAlign, { passive: true });
-</script>
-
+    window.addEventListener('resize', requestAlign);
+    window.addEventListener('scroll', requestAlign, { passive: true });
+  </script>
 </body>
 </html>
