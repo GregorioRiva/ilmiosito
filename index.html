@@ -22,8 +22,13 @@
 
       /* titoli progetti sotto i social */
       --topProjectsExtra: 260px;
-      --projRowGap: 10px;
-      --projColGap: 10px;
+
+      /* ✅ uguale ai social */
+      --projRowGap: 0px;
+      --projColGap: 4px;
+
+      /* ✅ stessa "interlinea" per social + titoli progetti */
+      --uiRow: 32px;
     }
 
     *{ box-sizing: border-box; }
@@ -58,13 +63,11 @@
       gap: var(--gap);
     }
 
-    /* ✅ IMPORTANTISSIMO: i titoli sopra devono stare "sopra" e restare cliccabili */
     .top{
       position: relative;
       z-index: 2;
     }
 
-    /* 👇 alza/abbassa TUTTO quello che sta sotto la scacchiera */
     .below{
       position: relative;
       z-index: 1;
@@ -75,8 +78,8 @@
     /* ===== COLONNA DESTRA (TESTO + SOCIAL + PROGETTI) ===== */
     .right{
       padding-top: 20px;
-      position: relative;                /* per ancorare social e titoli */
-      min-height: calc(var(--tile) * 3); /* altezza scacchiera */
+      position: relative;
+      min-height: calc(var(--tile) * 3);
       overflow: visible;
     }
 
@@ -86,6 +89,7 @@
       line-height: 1.55;
     }
 
+    /* ===== SOCIAL ===== */
     .social{
       position: absolute;
       top: var(--socialTop);
@@ -99,9 +103,9 @@
       white-space: nowrap;
     }
 
-    /* override dell’hover globale: qui niente shift/fade */
     .social a{
-      height: 32px;
+      height: var(--uiRow);
+      line-height: var(--uiRow);
       display: flex;
       align-items: center;
       padding: 0 14px 0 8px;
@@ -117,25 +121,25 @@
       color: #000;
     }
 
-    /* ===== TITOLI PROGETTI SOTTO I SOCIAL (✅ cliccabili) ===== */
+    /* ===== TITOLI PROGETTI (uguali ai social) ===== */
     .top-projects{
       position: absolute;
       top: calc(var(--socialTop) + var(--topProjectsExtra));
       left: 0;
 
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: auto auto; /* ✅ uguale ai social */
       column-gap: var(--projColGap);
       row-gap: var(--projRowGap);
       font-size: 17px;
       white-space: nowrap;
 
-      /* ✅ garantisce click anche se qualcosa passa sopra */
       z-index: 3;
     }
 
     .top-projects a{
-      height: 32px;
+      height: var(--uiRow);
+      line-height: var(--uiRow);
       display: flex;
       align-items: center;
       padding: 0 14px 0 8px;
@@ -216,7 +220,6 @@
       line-height: 1.55;
     }
 
-    /* ✅ titoli sotto NON cliccabili */
     .side-text h4{
       margin: 0 0 6px;
       font-size: 17px;
@@ -265,8 +268,8 @@
     <div class="right">
       <p class="desc">
         Mi chiamo Gregorio, ma potete chiamarmi Greg!<br>
-        Studio comunicazione visiva alla SUPSI/DACD di Mendrisio.
-        Questo sito è il mio spazio personale dove raccolgo progetti e idee in evoluzione.
+        Studio comunicazione visiva alla SUPSI/DACD di Mendrisio. Questo sito è il mio spazio personale dove raccolgo progetti<br>
+        e idee in evoluzione.
       </p>
 
       <div class="social">
@@ -276,7 +279,6 @@
         <a href="mailto:gregorio.riva@student.supsi.ch">Email SUPSI</a>
       </div>
 
-      <!-- ✅ QUESTI SONO CLICCABILI E RESTANO SOLO QUI -->
       <div class="top-projects" aria-label="Progetti">
         <a href="#autoritratto2d">Autoritratto 2D</a>
         <a href="#autoritratto3d">Autoritratto 3D</a>
@@ -301,15 +303,11 @@
       </section>
 
       <section class="project" id="progetto3">
-        <div class="embed">
-          <!-- iframe futuro: es. <iframe src="Progetto3/index.html"></iframe> -->
-        </div>
+        <div class="embed"></div>
       </section>
 
       <section class="project" id="progetto4">
-        <div class="embed">
-          <!-- iframe futuro: es. <iframe src="Progetto4/index.html"></iframe> -->
-        </div>
+        <div class="embed"></div>
       </section>
     </div>
 
@@ -317,9 +315,9 @@
       <div class="side-text" data-target="autoritratto2d">
         <h4>Autoritratto2D</h4>
         <p>
-          Un autoritratto bidimensionale derivato da una fotografia personale,
-          convertita in bianco e nero e analizzata a livello di pixel.
-          Ogni pixel viene trasformato in un punto, generando una trama puntinata
+          Un autoritratto bidimensionale derivato da una fotografia frontale,
+          monocromatica e analizzata a livello di pixel.
+          Ogni pixel corripsonde a un cerchio, generando una trama puntinata
           deformata da un sistema di forze simile a una calamita virtuale.
         </p>
       </div>
@@ -327,26 +325,19 @@
       <div class="side-text" data-target="autoritratto3d">
         <h4>Autoritratto3D</h4>
         <p>
-          Un autoritratto tridimensionale generato attraverso regole procedurali.
-          La forma si sviluppa nello spazio come struttura dinamica,
-          variabile nel tempo e potenzialmente reattiva all’interazione.
+          Un autoritratto tridimensionale importato da un'applicazione di scansione 3D.
+          La forma si sviluppa nello spazio come struttura dinamica, e reattiva all’interazione.
         </p>
       </div>
 
       <div class="side-text" data-target="progetto3">
         <h4>Caratteri in movimento</h4>
-        <p>
-          Descrizione del progetto in arrivo.
-          Spazio riservato a un lavoro futuro o in fase di sviluppo.
-        </p>
+        <p>Descrizione del progetto in arrivo. Spazio riservato a un lavoro futuro o in fase di sviluppo.</p>
       </div>
 
       <div class="side-text" data-target="progetto4">
         <h4>Data Self-Portrait</h4>
-        <p>
-          Descrizione del progetto in arrivo.
-          Spazio riservato a un lavoro futuro o sperimentale.
-        </p>
+        <p>Descrizione del progetto in arrivo. Spazio riservato a un lavoro futuro o sperimentale.</p>
       </div>
     </div>
   </div>
