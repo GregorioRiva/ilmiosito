@@ -14,12 +14,14 @@
       --portfolioPadL: 38px;
       --gridPadL: 10px;
 
+      /* ✅ alza TUTTO sotto (immagini + descrizioni) */
+      --belowOffset: -50px;
+
       /* allineamento social = altezza riga "RIVA" (tarabile) */
       --socialTop: calc(20px + (var(--tile) * 2) - 10px);
 
-      /* distanza tra social e titoli progetti (tarabile) */
-      --projectsGap: 260px;
-
+      /* titoli progetti sotto i social */
+      --topProjectsExtra: 260px;
       --projRowGap: 10px;
       --projColGap: 10px;
     }
@@ -37,6 +39,7 @@
 
     p{ margin: 0; }
 
+    /* ===== LINK BASE ===== */
     a{
       color: inherit;
       text-decoration: none;
@@ -47,31 +50,32 @@
       transform: translateX(2px);
     }
 
-    /* ===== LAYOUT ===== */
+    /* ===== LAYOUT (TOP + BELOW) ===== */
     .top,
     .below{
       display: grid;
       grid-template-columns: 1fr minmax(var(--colMin), var(--colMax));
       gap: var(--gap);
-      align-items: start;
     }
 
+    /* ✅ IMPORTANTISSIMO: i titoli sopra devono stare "sopra" e restare cliccabili */
     .top{
       position: relative;
       z-index: 2;
-      margin-bottom: 42px;
     }
 
+    /* 👇 alza/abbassa TUTTO quello che sta sotto la scacchiera */
     .below{
       position: relative;
       z-index: 1;
+      margin-top: var(--belowOffset);
       align-items: start;
     }
 
-    /* ===== COLONNA DESTRA (bio + social + link progetti) ===== */
+    /* ===== COLONNA DESTRA (TESTO + SOCIAL + PROGETTI) ===== */
     .right{
       padding-top: 20px;
-      position: relative;                /* ✅ serve per ancorare social e titoli */
+      position: relative;                /* per ancorare social e titoli */
       min-height: calc(var(--tile) * 3); /* altezza scacchiera */
       overflow: visible;
     }
@@ -82,7 +86,6 @@
       line-height: 1.55;
     }
 
-    /* ===== SOCIAL (DESKTOP: assoluti, quindi NON scendono “da soli”) ===== */
     .social{
       position: absolute;
       top: var(--socialTop);
@@ -96,7 +99,7 @@
       white-space: nowrap;
     }
 
-    /* override hover globale: qui niente shift/fade */
+    /* override dell’hover globale: qui niente shift/fade */
     .social a{
       height: 32px;
       display: flex;
@@ -114,10 +117,10 @@
       color: #000;
     }
 
-    /* ===== TITOLI PROGETTI (DESKTOP: assoluti) ===== */
+    /* ===== TITOLI PROGETTI SOTTO I SOCIAL (✅ cliccabili) ===== */
     .top-projects{
       position: absolute;
-      top: calc(var(--socialTop) + var(--projectsGap));
+      top: calc(var(--socialTop) + var(--topProjectsExtra));
       left: 0;
 
       display: grid;
@@ -127,6 +130,7 @@
       font-size: 17px;
       white-space: nowrap;
 
+      /* ✅ garantisce click anche se qualcosa passa sopra */
       z-index: 3;
     }
 
@@ -192,7 +196,7 @@
       aspect-ratio: 1 / 1;
       overflow: hidden;
       background: #000;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .embed iframe{
@@ -202,7 +206,7 @@
       display: block;
     }
 
-    /* ===== DESCRIZIONI A DESTRA (desktop) ===== */
+    /* ===== DESCRIZIONI A DESTRA (sotto) ===== */
     .side-desc{ position: relative; }
 
     .side-text{
@@ -212,6 +216,7 @@
       line-height: 1.55;
     }
 
+    /* ✅ titoli sotto NON cliccabili */
     .side-text h4{
       margin: 0 0 6px;
       font-size: 17px;
@@ -220,80 +225,14 @@
 
     .side-text p{ margin-bottom: 22px; }
 
-    /* ===== DESCRIZIONI MOBILE (sotto ogni progetto) ===== */
-    .mobile-desc{ display: none; }
-    .mobile-desc h4{
-      margin: 0 0 6px;
-      font-size: 17px;
-      font-weight: 700;
-    }
-    .mobile-desc p{
-      margin: 0 0 26px;
-      font-size: 17px;
-      line-height: 1.55;
-      max-width: 60ch;
-    }
-
     /* ===== RESPONSIVE ===== */
     @media (max-width: 900px){
-      body{ margin: 18px; }
-
+      body{ margin: 24px; }
       .top, .below{ grid-template-columns: 1fr; }
-      .portfolio{ padding-left: 0; }
-
-      /* ✅ su mobile NON assoluti: tutto in colonna */
-      .social,
-      .top-projects{
-        position: static;
-        top: auto;
-        left: auto;
-      }
-
-      .right{ min-height: auto; padding-top: 18px; }
-
-      /* ✅ niente bordi/tondi */
-      .social{
-        margin-top: 14px;
-        grid-template-columns: 1fr;
-        row-gap: 8px;
-        white-space: normal;
-      }
-      .social a{
-        height: auto;
-        padding: 0;
-        display: inline;
-        background: none;
-        color: inherit;
-      }
-      .social a:hover{
-        background: none;
-        color: inherit;
-        opacity: 0.6;
-      }
-
-      .top-projects{
-        margin-top: 14px;
-        grid-template-columns: 1fr;
-        row-gap: 8px;
-        white-space: normal;
-      }
-      .top-projects a{
-        height: auto;
-        padding: 0;
-        display: inline;
-        background: none;
-        color: inherit;
-      }
-      .top-projects a:hover{
-        background: none;
-        color: inherit;
-        opacity: 0.6;
-      }
-
       .side-desc{ display: none; }
-      .mobile-desc{ display: block; }
-
-      .project{ margin-top: 56px; }
+      .top-projects{ display: none; }
+      .social{ position: static; margin-top: 18px; }
+      .right{ min-height: auto; }
     }
   </style>
 </head>
@@ -337,6 +276,7 @@
         <a href="mailto:gregorio.riva@student.supsi.ch">Email SUPSI</a>
       </div>
 
+      <!-- ✅ QUESTI SONO CLICCABILI E RESTANO SOLO QUI -->
       <div class="top-projects" aria-label="Progetti">
         <a href="#autoritratto2d">Autoritratto 2D</a>
         <a href="#autoritratto3d">Autoritratto 3D</a>
@@ -352,28 +292,11 @@
         <div class="embed">
           <iframe src="Autoritratto2D/index.html"></iframe>
         </div>
-        <div class="mobile-desc">
-          <h4>Autoritratto2D</h4>
-          <p>
-            Un autoritratto bidimensionale derivato da una fotografia personale,
-            convertita in bianco e nero e analizzata a livello di pixel.
-            Ogni pixel viene trasformato in un punto, generando una trama puntinata
-            deformata da un sistema di forze simile a una calamita virtuale.
-          </p>
-        </div>
       </section>
 
       <section class="project" id="autoritratto3d">
         <div class="embed">
           <iframe src="Autoritratto3D/index.html"></iframe>
-        </div>
-        <div class="mobile-desc">
-          <h4>Autoritratto3D</h4>
-          <p>
-            Un autoritratto tridimensionale generato attraverso regole procedurali.
-            La forma si sviluppa nello spazio come struttura dinamica,
-            variabile nel tempo e potenzialmente reattiva all’interazione.
-          </p>
         </div>
       </section>
 
@@ -381,25 +304,11 @@
         <div class="embed">
           <!-- iframe futuro: es. <iframe src="Progetto3/index.html"></iframe> -->
         </div>
-        <div class="mobile-desc">
-          <h4>Caratteri in movimento</h4>
-          <p>
-            Descrizione del progetto in arrivo.
-            Spazio riservato a un lavoro futuro o in fase di sviluppo.
-          </p>
-        </div>
       </section>
 
       <section class="project" id="progetto4">
         <div class="embed">
           <!-- iframe futuro: es. <iframe src="Progetto4/index.html"></iframe> -->
-        </div>
-        <div class="mobile-desc">
-          <h4>Data Self-Portrait</h4>
-          <p>
-            Descrizione del progetto in arrivo.
-            Spazio riservato a un lavoro futuro o sperimentale.
-          </p>
         </div>
       </section>
     </div>
@@ -454,8 +363,6 @@
     }
 
     function alignDescriptions(){
-      if (window.matchMedia('(max-width: 900px)').matches) return;
-
       const sideDesc = document.querySelector('.side-desc');
       if (!sideDesc) return;
 
