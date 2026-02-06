@@ -5,50 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ciao sono Greg</title>
 
-  <!-- ✅ FIX cursore su GitHub Pages: test + fallback (project pages + user pages + relativo) -->
-  <script>
-    (function () {
-      const parts = location.pathname.split("/").filter(Boolean);
-
-      // candidate 1: project pages -> /REPO/cursor/Red_star.png
-      const candidateA = parts.length ? `/${parts[0]}/cursor/Red_star.png` : "/cursor/Red_star.png";
-      // candidate 2: user/org pages -> /cursor/Red_star.png
-      const candidateB = "/cursor/Red_star.png";
-      // candidate 3: relativo -> ./cursor/Red_star.png
-      const candidateC = "./cursor/Red_star.png";
-
-      function setCursor(url){
-        document.documentElement.style.setProperty(
-          "--star-cursor",
-          `url("${url}") 16 16, auto`
-        );
-      }
-
-      function test(url){
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve(url);
-          img.onerror = reject;
-          img.src = url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
-        });
-      }
-
-      document.addEventListener("DOMContentLoaded", async () => {
-        try {
-          const ok = await test(candidateA);
-          setCursor(ok);
-        } catch {
-          try {
-            const ok = await test(candidateB);
-            setCursor(ok);
-          } catch {
-            setCursor(candidateC);
-          }
-        }
-      });
-    })();
-  </script>
-
+  <!-- ✅ FIX cursore GitHub Pages: default CSS (subito) + rilevamento path robusto -->
   <style>
     :root{
       --tile: 90px;
@@ -72,8 +29,8 @@
 
       --overlapMono: 80px;
 
-      /* ✅ verrà impostato dallo script sopra */
-      --star-cursor: auto;
+      /* ✅ fallback IMMEDIATO (funziona se /cursor/ è accanto a index.html) */
+      --star-cursor: url("cursor/Red_star.png") 16 16, auto;
     }
 
     *{ box-sizing: border-box; }
@@ -99,7 +56,6 @@
       transform: translateX(2px);
     }
 
-    /* ✅ FIX overflow per Grid: fondamentale */
     .top > *, .below > *{ min-width: 0; }
 
     .top,
@@ -287,22 +243,11 @@
         --colMax: 420px;
       }
 
-      .top, .below{
-        grid-template-columns: 1fr;
-      }
+      .top, .below{ grid-template-columns: 1fr; }
+      .portfolio{ padding-left: 0; }
+      .side-desc{ display: none; }
 
-      .portfolio{
-        padding-left: 0;
-      }
-
-      .side-desc{
-        display: none;
-      }
-
-      .right{
-        padding-top: 10px;
-        min-height: auto;
-      }
+      .right{ padding-top: 10px; min-height: auto; }
 
       .desc{
         padding-left: 0;
@@ -335,39 +280,73 @@
         border: 1px solid rgba(255,255,255,0.18);
       }
 
-      .below{
-        margin-top: 28px;
-      }
+      .below{ margin-top: 28px; }
     }
 
     @media (max-width: 520px){
-      :root{
-        --tile: 70px;
-        --gridPadL: 0px;
-      }
-
-      .char{
-        font-size: 34px;
-      }
-
-      .social,
-      .top-projects{
-        grid-template-columns: 1fr;
-      }
+      :root{ --tile: 70px; --gridPadL: 0px; }
+      .char{ font-size: 34px; }
+      .social, .top-projects{ grid-template-columns: 1fr; }
     }
 
     /* ✅ CURSORE STELLA ovunque */
-    html, body, body *{
-      cursor: var(--star-cursor) !important;
-    }
+    html, body, body *{ cursor: var(--star-cursor) !important; }
 
-    /* ✅ se vuoi la stella anche sopra i frame, COMMENTA queste 2 righe.
-       Lasciandole, sopra i frame resta normale (e dentro decide l'iframe). */
-    .embed,
-    .embed *{
-      cursor: auto !important;
-    }
+    /* ✅ sopra i frame resta normale (e dentro decide l'iframe).
+       Se vuoi la stella anche sopra i frame, commenta questo blocco. */
+    .embed, .embed *{ cursor: auto !important; }
   </style>
+
+  <script>
+    (function () {
+      function setCursor(url){
+        document.documentElement.style.setProperty("--star-cursor", `url("${url}") 16 16, auto`);
+      }
+
+      function test(url){
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(url);
+          img.onerror = reject;
+          // cache-bust leggero
+          img.src = url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        // base directory della pagina (funziona anche se index.html è in sottocartelle)
+        const baseDir = new URL(".", location.href).href; // es: https://.../repo/
+        const origin = location.origin;
+
+        const parts = location.pathname.split("/").filter(Boolean);
+        const repo = parts.length ? parts[0] : "";
+
+        // ✅ candidati robusti
+        const candidates = [
+          // 1) vicino alla pagina corrente (consigliato)
+          new URL("cursor/Red_star.png", baseDir).href,
+
+          // 2) project pages: https://host/REPO/cursor/...
+          repo ? `${origin}/${repo}/cursor/Red_star.png` : "",
+
+          // 3) user/org pages: https://host/cursor/...
+          `${origin}/cursor/Red_star.png`,
+
+          // 4) relativo semplice (fallback)
+          "cursor/Red_star.png"
+        ].filter(Boolean);
+
+        for (const url of candidates){
+          try{
+            const ok = await test(url);
+            setCursor(ok);
+            return;
+          }catch(e){ /* prova il prossimo */ }
+        }
+        // se tutto fallisce, resta auto (o il fallback CSS già presente)
+      });
+    })();
+  </script>
 </head>
 
 <body>
