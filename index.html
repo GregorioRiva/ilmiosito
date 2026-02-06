@@ -31,10 +31,6 @@
 
     *{ box-sizing: border-box; }
 
-    html, body{
-      cursor: url("cursor/Red_star.png") 16 16, auto;
-    }
-
     body{
       margin: clamp(16px, 3.5vw, 36px);
       background: #000;
@@ -318,10 +314,16 @@
       }
     }
 
-    body, body *{
-      cursor: url("cursor/Red_star.png") 16 16, auto !important;
+    /* ===== CURSORE STELLA (robusto su GitHub Pages) ===== */
+    :root{
+      --star-cursor: url("./cursor/Red_star.png") 16 16, auto;
     }
 
+    html, body, body *{
+      cursor: var(--star-cursor) !important;
+    }
+
+    /* ✅ ECCEZIONE: sopra i frame progetti torna il cursore normale */
     .embed,
     .embed *{
       cursor: auto !important;
@@ -436,7 +438,7 @@
         <p>
           Visualizzazione dei film visti a partire dai dati esportati da Letterboxd.
           Ogni film è associato a un genere dominante, normalizzato in un set limitato e coerente,
-          per costruire un grafico essenziale che evidenzia pattern e preferenze personali.
+          per costruire un grafico essenziale che evidenzia pattern e preferenze.
         </p>
       </div>
     </div>
@@ -446,9 +448,7 @@
     const OFFSET_DEFAULT = -200;
     const OFFSET_MONOGRAMMA = -340;
 
-    /* ✅ nuovo offset solo per Letterboxd */
     const OFFSET_DATALB = -500;
-
 
     const MIN_GAP = 20;
 
