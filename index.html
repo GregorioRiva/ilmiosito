@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ciao sono Greg</title>
 
-  <!-- ✅ FIX cursore GitHub Pages: default CSS (subito) + rilevamento path robusto -->
   <style>
     :root{
       --tile: 90px;
       --gap: 30px;
-      --colMax: 480px;
-      --colMin: 360px;
       --portfolioPadL: 38px;
       --gridPadL: 10px;
 
@@ -21,16 +18,9 @@
       --socialTop: calc(20px + (var(--tile) * 2) - 10px);
       --topProjectsExtra: 260px;
 
-      --projRowGap: 0px;
-      --projColGap: 4px;
-
       --uiRow: 32px;
       --uiTextInset: 8px;
-
       --overlapMono: 80px;
-
-      /* ✅ fallback IMMEDIATO (funziona se /cursor/ è accanto a index.html) */
-      --star-cursor: url("cursor/Red_star.png") 16 16, auto;
     }
 
     *{ box-sizing: border-box; }
@@ -56,6 +46,19 @@
       transform: translateX(2px);
     }
 
+    /* ✅ CURSORE: SOLO CSS, CON FALLBACK MULTIPLI
+       (funziona se ./cursor/Red_star.png esiste davvero) */
+    html, body, body *{
+      cursor:
+        url("cursor/Red_star.png") 16 16,
+        url("./cursor/Red_star.png") 16 16,
+        url("/cursor/Red_star.png") 16 16,
+        auto !important;
+    }
+
+    /* Se vuoi la stella anche "sopra" i frame, commenta questo blocco */
+    .embed, .embed *{ cursor: auto !important; }
+
     .top > *, .below > *{ min-width: 0; }
 
     .top,
@@ -65,11 +68,7 @@
       gap: clamp(18px, 3.5vw, var(--gap));
     }
 
-    .top{
-      position: relative;
-      z-index: 2;
-    }
-
+    .top{ position: relative; z-index: 2; }
     .below{
       position: relative;
       z-index: 1;
@@ -97,68 +96,45 @@
       position: absolute;
       top: var(--socialTop);
       left: 0;
-
       display: grid;
       grid-template-columns: auto auto;
       column-gap: 4px;
-      row-gap: 0;
       font-size: 17px;
       white-space: nowrap;
     }
 
-    .social a{
-      height: var(--uiRow);
-      line-height: var(--uiRow);
-      display: flex;
-      align-items: center;
-      padding: 0 14px 0 var(--uiTextInset);
-
-      opacity: 1;
-      transform: none;
-      transition: background 150ms ease, color 150ms ease;
-    }
-    .social a:hover{
-      opacity: 1;
-      transform: none;
-      background: #fff;
-      color: #000;
-    }
-
-    .top-projects{
-      position: absolute;
-      top: calc(var(--socialTop) + var(--topProjectsExtra));
-      left: 0;
-
-      display: grid;
-      grid-template-columns: auto auto;
-      column-gap: var(--projColGap);
-      row-gap: var(--projRowGap);
-      font-size: 17px;
-      white-space: nowrap;
-
-      z-index: 3;
-    }
-
+    .social a,
     .top-projects a{
       height: var(--uiRow);
       line-height: var(--uiRow);
       display: flex;
       align-items: center;
       padding: 0 14px 0 var(--uiTextInset);
-
-      opacity: 1;
-      transform: none;
       transition: background 150ms ease, color 150ms ease;
     }
+
+    .social a:hover,
     .top-projects a:hover{
-      opacity: 1;
-      transform: none;
       background: #fff;
       color: #000;
+      opacity: 1;
+      transform: none;
+    }
+
+    .top-projects{
+      position: absolute;
+      top: calc(var(--socialTop) + var(--topProjectsExtra));
+      left: 0;
+      display: grid;
+      grid-template-columns: auto auto;
+      column-gap: 4px;
+      font-size: 17px;
+      white-space: nowrap;
+      z-index: 3;
     }
 
     .dock-grid{ padding-left: var(--gridPadL); }
-    .dock-grid .row{ display: flex; gap: 0; }
+    .dock-grid .row{ display: flex; }
 
     .letter{
       width: var(--tile);
@@ -180,27 +156,16 @@
     }
 
     .letter:hover{ background: #fff; }
-    .letter:hover .char{
-      color: #000;
-      transform: scale(1.5);
-    }
+    .letter:hover .char{ color: #000; transform: scale(1.5); }
 
     .portfolio{
       padding-left: var(--portfolioPadL);
-      max-width: none;
       min-width: 0;
     }
 
-    html{ scroll-behavior: smooth; }
-
     .project{ margin-top: var(--projectGap); }
     .project:first-of-type{ margin-top: 0; }
-    .project{ position: relative; z-index: 1; }
-
-    #progetto3{
-      margin-top: calc(var(--projectGap) - var(--overlapMono));
-      z-index: 5;
-    }
+    #progetto3{ margin-top: calc(var(--projectGap) - var(--overlapMono)); }
 
     .embed{
       width: 100%;
@@ -208,10 +173,7 @@
       overflow: hidden;
       background: #000;
       margin-bottom: 20px;
-      position: relative;
-      z-index: 1;
     }
-
     .embed iframe{
       width: 100%;
       height: 100%;
@@ -220,7 +182,6 @@
     }
 
     .side-desc{ position: relative; min-width: 0; }
-
     .side-text{
       position: absolute;
       width: 100%;
@@ -228,48 +189,24 @@
       line-height: 1.55;
       overflow-wrap: anywhere;
     }
-
-    .side-text h4{
-      margin: 0 0 6px;
-      font-size: 17px;
-      font-weight: 700;
-    }
-
+    .side-text h4{ margin: 0 0 6px; font-size: 17px; font-weight: 700; }
     .side-text p{ margin-bottom: 22px; }
 
     @media (max-width: 980px){
-      :root{
-        --colMin: 280px;
-        --colMax: 420px;
-      }
-
       .top, .below{ grid-template-columns: 1fr; }
       .portfolio{ padding-left: 0; }
       .side-desc{ display: none; }
 
       .right{ padding-top: 10px; min-height: auto; }
+      .desc{ padding-left: 0; }
 
-      .desc{
-        padding-left: 0;
-        font-size: clamp(15px, 1.5vw, 17px);
-      }
-
-      .social{
-        position: static;
-        margin-top: 16px;
-        white-space: normal;
-        grid-template-columns: 1fr 1fr;
-        column-gap: 10px;
-        row-gap: 6px;
-      }
-
+      .social,
       .top-projects{
         position: static;
         margin-top: 14px;
         white-space: normal;
         grid-template-columns: 1fr 1fr;
-        column-gap: 10px;
-        row-gap: 6px;
+        gap: 10px;
       }
 
       .social a,
@@ -288,65 +225,7 @@
       .char{ font-size: 34px; }
       .social, .top-projects{ grid-template-columns: 1fr; }
     }
-
-    /* ✅ CURSORE STELLA ovunque */
-    html, body, body *{ cursor: var(--star-cursor) !important; }
-
-    /* ✅ sopra i frame resta normale (e dentro decide l'iframe).
-       Se vuoi la stella anche sopra i frame, commenta questo blocco. */
-    .embed, .embed *{ cursor: auto !important; }
   </style>
-
-  <script>
-    (function () {
-      function setCursor(url){
-        document.documentElement.style.setProperty("--star-cursor", `url("${url}") 16 16, auto`);
-      }
-
-      function test(url){
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve(url);
-          img.onerror = reject;
-          // cache-bust leggero
-          img.src = url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
-        });
-      }
-
-      document.addEventListener("DOMContentLoaded", async () => {
-        // base directory della pagina (funziona anche se index.html è in sottocartelle)
-        const baseDir = new URL(".", location.href).href; // es: https://.../repo/
-        const origin = location.origin;
-
-        const parts = location.pathname.split("/").filter(Boolean);
-        const repo = parts.length ? parts[0] : "";
-
-        // ✅ candidati robusti
-        const candidates = [
-          // 1) vicino alla pagina corrente (consigliato)
-          new URL("cursor/Red_star.png", baseDir).href,
-
-          // 2) project pages: https://host/REPO/cursor/...
-          repo ? `${origin}/${repo}/cursor/Red_star.png` : "",
-
-          // 3) user/org pages: https://host/cursor/...
-          `${origin}/cursor/Red_star.png`,
-
-          // 4) relativo semplice (fallback)
-          "cursor/Red_star.png"
-        ].filter(Boolean);
-
-        for (const url of candidates){
-          try{
-            const ok = await test(url);
-            setCursor(ok);
-            return;
-          }catch(e){ /* prova il prossimo */ }
-        }
-        // se tutto fallisce, resta auto (o il fallback CSS già presente)
-      });
-    })();
-  </script>
 </head>
 
 <body>
@@ -468,13 +347,8 @@
     const OFFSET_DATALB = -500;
     const MIN_GAP = 20;
 
-    function docTop(el){
-      return el.getBoundingClientRect().top + window.scrollY;
-    }
-    function docBottom(el){
-      const r = el.getBoundingClientRect();
-      return r.bottom + window.scrollY;
-    }
+    function docTop(el){ return el.getBoundingClientRect().top + window.scrollY; }
+    function docBottom(el){ const r = el.getBoundingClientRect(); return r.bottom + window.scrollY; }
 
     function alignDescriptions(){
       const sideDesc = document.querySelector('.side-desc');
@@ -511,19 +385,13 @@
     function requestAlign(){
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(() => {
-        alignDescriptions();
-        ticking = false;
-      });
+      requestAnimationFrame(() => { alignDescriptions(); ticking = false; });
     }
 
     window.addEventListener('load', () => {
       alignDescriptions();
-      document.querySelectorAll('.embed iframe').forEach(f => {
-        f.addEventListener('load', requestAlign);
-      });
+      document.querySelectorAll('.embed iframe').forEach(f => f.addEventListener('load', requestAlign));
     });
-
     window.addEventListener('resize', requestAlign);
     window.addEventListener('scroll', requestAlign, { passive: true });
   </script>
