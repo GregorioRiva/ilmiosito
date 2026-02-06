@@ -1,0 +1,318 @@
+[
+  {
+    "title": "The Shawshank Redemption",
+    "genre": "Drama"
+  },
+  {
+    "title": "Past Lives",
+    "genre": "Romance"
+  },
+  {
+    "title": "Perfect Blue",
+    "genre": "Thriller"
+  },
+  {
+    "title": "Parthenope",
+    "genre": "Drama"
+  },
+  {
+    "title": "The Birds",
+    "genre": "Thriller"
+  },
+  {
+    "title": "The Hateful Eight",
+    "genre": "Action"
+  },
+  {
+    "title": "Django Unchained",
+    "genre": "Action"
+  },
+  {
+    "title": "The Magnificent Seven",
+    "genre": "Action"
+  },
+  {
+    "title": "Avatar",
+    "genre": "Sci-Fi"
+  },
+  {
+    "title": "Coraline",
+    "genre": "Animation"
+  },
+  {
+    "title": "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
+    "genre": "Fantasy"
+  },
+  {
+    "title": "Charlie and the Chocolate Factory",
+    "genre": "Comedy"
+  },
+  {
+    "title": "Amélie",
+    "genre": "Comedy"
+  },
+  {
+    "title": "Blade Runner",
+    "genre": "Sci-Fi"
+  },
+  {
+    "title": "Inglourious Basterds",
+    "genre": "Action"
+  },
+  {
+    "title": "V for Vendetta",
+    "genre": "Action"
+  },
+  {
+    "title": "Alien",
+    "genre": "Sci-Fi"
+  },
+  {
+    "title": "Once Upon a Time... in Hollywood",
+    "genre": "Action"
+  },
+  {
+    "title": "Event Horizon",
+    "genre": "Sci-Fi"
+  },
+  {
+    "title": "Il mio amico Massimo",
+    "genre": "Documentary"
+  },
+  {
+    "title": "Mulholland Drive",
+    "genre": "Drama"
+  },
+  {
+    "title": "Kill Bill: Vol. 1",
+    "genre": "Action"
+  },
+  {
+    "title": "Kill Bill: Vol. 2",
+    "genre": "Action"
+  },
+  {
+    "title": "Joker",
+    "genre": "Drama"
+  },
+  {
+    "title": "Reservoir Dogs",
+    "genre": "Action"
+  },
+  {
+    "title": "The Sacrifice",
+    "genre": "Drama"
+  },
+  {
+    "title": "The Wind That Shakes the Barley",
+    "genre": "Drama"
+  },
+  {
+    "title": "Frankenweenie",
+    "genre": "Animation"
+  },
+  {
+    "title": "Lost in Translation",
+    "genre": "Romance"
+  },
+  {
+    "title": "Before Sunrise",
+    "genre": "Romance"
+  },
+  {
+    "title": "Pulp Fiction",
+    "genre": "Action"
+  },
+  {
+    "title": "Disturbia",
+    "genre": "Thriller"
+  },
+  {
+    "title": "Eternal Sunshine of the Spotless Mind",
+    "genre": "Romance"
+  },
+  {
+    "title": "Sentimental Value",
+    "genre": "Drama"
+  },
+  {
+    "title": "Megalopolis",
+    "genre": "Drama"
+  },
+  {
+    "title": "Ratatouille",
+    "genre": "Animation"
+  },
+  {
+    "title": "Exterior Night",
+    "genre": "Drama"
+  },
+  {
+    "title": "Space Jam",
+    "genre": "Animation"
+  },
+  {
+    "title": "Aliens",
+    "genre": "Sci-Fi"
+  },
+  {
+    "title": "Battle for Sevastopol",
+    "genre": "Action"
+  },
+  {
+    "title": "Parasite",
+    "genre": "Drama"
+  },
+  {
+    "title": "The Matrix",
+    "genre": "Sci-Fi"
+  },
+  {
+    "title": "Ghostbusters",
+    "genre": "Comedy"
+  },
+  {
+    "title": "Silver Linings Playbook",
+    "genre": "Drama"
+  },
+  {
+    "title": "Brave",
+    "genre": "Animation"
+  },
+  {
+    "title": "Freaks Out",
+    "genre": "Action"
+  },
+  {
+    "title": "Bonjour Switzerland",
+    "genre": "Comedy"
+  },
+  {
+    "title": "Stand by Me",
+    "genre": "Drama"
+  },
+  {
+    "title": "Young Sherlock Holmes",
+    "genre": "Action"
+  },
+  {
+    "title": "Cinema Paradiso",
+    "genre": "Drama"
+  },
+  {
+    "title": "Lady Bird",
+    "genre": "Drama"
+  },
+  {
+    "title": "Akira",
+    "genre": "Animation"
+  },
+  {
+    "title": "The Godfather",
+    "genre": "Thriller"
+  },
+  {
+    "title": "Treasure Planet",
+    "genre": "Animation"
+  },
+  {
+    "title": "Psycho",
+    "genre": "Horror"
+  },
+  {
+    "title": "Guardians of the Galaxy",
+    "genre": "Action"
+  },
+  {
+    "title": "Fight Club",
+    "genre": "Action"
+  },
+  {
+    "title": "Atlantis: The Lost Empire",
+    "genre": "Animation"
+  },
+  {
+    "title": "Avatar: Fire and Ash",
+    "genre": "Action"
+  },
+  {
+    "title": "Fargo",
+    "genre": "Thriller"
+  },
+  {
+    "title": "Batman Returns",
+    "genre": "Action"
+  },
+  {
+    "title": "Zootopia",
+    "genre": "Animation"
+  },
+  {
+    "title": "One Hundred and One Dalmatians",
+    "genre": "Animation"
+  },
+  {
+    "title": "The Mask",
+    "genre": "Comedy"
+  },
+  {
+    "title": "Coraline",
+    "genre": "Animation"
+  },
+  {
+    "title": "The NeverEnding Story",
+    "genre": "Fantasy"
+  },
+  {
+    "title": "Alien",
+    "genre": "Sci-Fi"
+  },
+  {
+    "title": "A Christmas Carol",
+    "genre": "Animation"
+  },
+  {
+    "title": "Ponyo",
+    "genre": "Animation"
+  },
+  {
+    "title": "Only Yesterday",
+    "genre": "Animation"
+  },
+  {
+    "title": "Princess Mononoke",
+    "genre": "Animation"
+  },
+  {
+    "title": "Zootopia 2",
+    "genre": "Animation"
+  },
+  {
+    "title": "Hercules",
+    "genre": "Animation"
+  },
+  {
+    "title": "Life of Brian",
+    "genre": "Comedy"
+  },
+  {
+    "title": "Finding Nemo",
+    "genre": "Animation"
+  },
+  {
+    "title": "Ghostbusters II",
+    "genre": "Comedy"
+  },
+  {
+    "title": "My Neighbor Totoro",
+    "genre": "Animation"
+  },
+  {
+    "title": "Sentimental Value",
+    "genre": "Drama"
+  },
+  {
+    "title": "Notting Hill",
+    "genre": "Comedy"
+  }
+]
