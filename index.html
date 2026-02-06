@@ -14,24 +14,28 @@
       --portfolioPadL: 38px;
       --gridPadL: 10px;
 
-      /* ✅ alza TUTTO sotto (immagini + descrizioni) */
       --belowOffset: -120px;
+      --projectGap: 130px;
 
-      /* allineamento social = altezza riga "RIVA" (tarabile) */
       --socialTop: calc(20px + (var(--tile) * 2) - 10px);
-
-      /* titoli progetti sotto i social */
       --topProjectsExtra: 260px;
 
-      /* ✅ uguale ai social */
       --projRowGap: 0px;
       --projColGap: 4px;
 
-      /* ✅ stessa "interlinea" per social + titoli progetti */
       --uiRow: 32px;
+      --uiTextInset: 8px;
+
+      /* ✅ overlap tra progetti (Monogramma sopra Autoritratto3D) */
+      --overlapMono: 80px; /* aumenta per più overlap (es. 120) */
     }
 
     *{ box-sizing: border-box; }
+
+    /* ✅ cursore stella visibile ovunque DI DEFAULT */
+    html, body{
+      cursor: url("cursor/Red_star.png") 16 16, auto;
+    }
 
     body{
       margin: 28px 36px 24px;
@@ -44,7 +48,6 @@
 
     p{ margin: 0; }
 
-    /* ===== LINK BASE ===== */
     a{
       color: inherit;
       text-decoration: none;
@@ -55,7 +58,6 @@
       transform: translateX(2px);
     }
 
-    /* ===== LAYOUT (TOP + BELOW) ===== */
     .top,
     .below{
       display: grid;
@@ -75,7 +77,6 @@
       align-items: start;
     }
 
-    /* ===== COLONNA DESTRA (TESTO + SOCIAL + PROGETTI) ===== */
     .right{
       padding-top: 20px;
       position: relative;
@@ -87,9 +88,9 @@
       margin-top: 6px;
       font-size: 17px;
       line-height: 1.55;
+      padding-left: var(--uiTextInset);
     }
 
-    /* ===== SOCIAL ===== */
     .social{
       position: absolute;
       top: var(--socialTop);
@@ -108,7 +109,7 @@
       line-height: var(--uiRow);
       display: flex;
       align-items: center;
-      padding: 0 14px 0 8px;
+      padding: 0 14px 0 var(--uiTextInset);
 
       opacity: 1;
       transform: none;
@@ -121,14 +122,13 @@
       color: #000;
     }
 
-    /* ===== TITOLI PROGETTI (uguali ai social) ===== */
     .top-projects{
       position: absolute;
       top: calc(var(--socialTop) + var(--topProjectsExtra));
       left: 0;
 
       display: grid;
-      grid-template-columns: auto auto; /* ✅ uguale ai social */
+      grid-template-columns: auto auto;
       column-gap: var(--projColGap);
       row-gap: var(--projRowGap);
       font-size: 17px;
@@ -142,7 +142,7 @@
       line-height: var(--uiRow);
       display: flex;
       align-items: center;
-      padding: 0 14px 0 8px;
+      padding: 0 14px 0 var(--uiTextInset);
 
       opacity: 1;
       transform: none;
@@ -155,7 +155,6 @@
       color: #000;
     }
 
-    /* ===== SCACCHIERA ===== */
     .dock-grid{ padding-left: var(--gridPadL); }
     .dock-grid .row{ display: flex; }
 
@@ -166,7 +165,6 @@
       align-items: center;
       justify-content: center;
       background: #000;
-      cursor: pointer;
       transition: background 150ms ease;
     }
 
@@ -184,7 +182,6 @@
       transform: scale(1.5);
     }
 
-    /* ===== PORTFOLIO ===== */
     .portfolio{
       padding-left: var(--portfolioPadL);
       max-width: none;
@@ -192,8 +189,18 @@
 
     html{ scroll-behavior: smooth; }
 
-    .project{ margin-top: 200px; }
+    /* ✅ base spacing */
+    .project{ margin-top: var(--projectGap); }
     .project:first-of-type{ margin-top: 0; }
+
+    /* ✅ per gestire overlap via z-index */
+    .project{ position: relative; z-index: 1; }
+
+    /* ✅ OVERLAP: Monogramma sale sopra Autoritratto3D */
+    #progetto3{
+      margin-top: calc(var(--projectGap) - var(--overlapMono));
+      z-index: 5;
+    }
 
     .embed{
       width: 100%;
@@ -201,6 +208,8 @@
       overflow: hidden;
       background: #000;
       margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
     }
 
     .embed iframe{
@@ -210,7 +219,12 @@
       display: block;
     }
 
-    /* ===== DESCRIZIONI A DESTRA (sotto) ===== */
+    /* ✅ SOLO sopra i frame dei progetti: cursore normale (visibile) */
+    .embed,
+    .embed iframe{
+      cursor: auto !important;
+    }
+
     .side-desc{ position: relative; }
 
     .side-text{
@@ -228,7 +242,6 @@
 
     .side-text p{ margin-bottom: 22px; }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 900px){
       body{ margin: 24px; }
       .top, .below{ grid-template-columns: 1fr; }
@@ -236,6 +249,18 @@
       .top-projects{ display: none; }
       .social{ position: static; margin-top: 18px; }
       .right{ min-height: auto; }
+      .desc{ padding-left: 0; }
+    }
+
+    /* ✅ FORZA la stella ovunque (anche su link/social/titoli) */
+    body, body *{
+      cursor: url("cursor/Red_star.png") 16 16, auto !important;
+    }
+
+    /* ✅ ECCEZIONE: sopra i frame progetti torna il cursore normale */
+    .embed,
+    .embed *{
+      cursor: auto !important;
     }
   </style>
 </head>
@@ -303,7 +328,9 @@
       </section>
 
       <section class="project" id="progetto3">
-        <div class="embed"></div>
+        <div class="embed">
+          <iframe src="Caratteri/index.html"></iframe>
+        </div>
       </section>
 
       <section class="project" id="progetto4">
@@ -332,7 +359,8 @@
 
       <div class="side-text" data-target="progetto3">
         <h4>Caratteri in movimento</h4>
-        <p>Descrizione del progetto in arrivo. Spazio riservato a un lavoro futuro o in fase di sviluppo.</p>
+        <p>Monogramma generativo “GR” con disturbo a strisce: alterna glitch, pausa leggibile e scomposizione finale.
+            La G scorre verso sinistra e la R verso destra, con timing scaglionato.</p>
       </div>
 
       <div class="side-text" data-target="progetto4">
@@ -343,7 +371,9 @@
   </div>
 
   <script>
-    const OFFSET = -200;
+    const OFFSET_DEFAULT = -200;
+    const OFFSET_MONOGRAMMA = -340;
+    const MIN_GAP = 20;
 
     function docTop(el){
       return el.getBoundingClientRect().top + window.scrollY;
@@ -358,20 +388,22 @@
       if (!sideDesc) return;
 
       const sideTop = docTop(sideDesc);
-      let lastBottom = 0;
+      let lastBottom = -Infinity;
 
       document.querySelectorAll('.side-text').forEach(desc => {
         const target = document.getElementById(desc.dataset.target);
         if (!target) return;
 
-        const iframe = target.querySelector('.embed iframe');
-        let y;
+        const embed = target.querySelector('.embed');
+        let y = 0;
 
-        if (iframe){
-          y = docBottom(iframe) - sideTop + OFFSET;
-        } else {
-          y = lastBottom + 80;
+        if (embed){
+          const isMonogramma = desc.dataset.target === 'progetto3';
+          const offset = isMonogramma ? OFFSET_MONOGRAMMA : OFFSET_DEFAULT;
+          y = docBottom(embed) - sideTop + offset;
         }
+
+        if (y < lastBottom + MIN_GAP) y = lastBottom + MIN_GAP;
 
         desc.style.top = y + 'px';
         lastBottom = y + desc.offsetHeight;
