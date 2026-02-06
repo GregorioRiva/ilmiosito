@@ -5,6 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ciao sono Greg</title>
 
+  <!-- ✅ FIX cursore su GitHub Pages: test + fallback (project pages + user pages + relativo) -->
+  <script>
+    (function () {
+      const parts = location.pathname.split("/").filter(Boolean);
+
+      // candidate 1: project pages -> /REPO/cursor/Red_star.png
+      const candidateA = parts.length ? `/${parts[0]}/cursor/Red_star.png` : "/cursor/Red_star.png";
+      // candidate 2: user/org pages -> /cursor/Red_star.png
+      const candidateB = "/cursor/Red_star.png";
+      // candidate 3: relativo -> ./cursor/Red_star.png
+      const candidateC = "./cursor/Red_star.png";
+
+      function setCursor(url){
+        document.documentElement.style.setProperty(
+          "--star-cursor",
+          `url("${url}") 16 16, auto`
+        );
+      }
+
+      function test(url){
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(url);
+          img.onerror = reject;
+          img.src = url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const ok = await test(candidateA);
+          setCursor(ok);
+        } catch {
+          try {
+            const ok = await test(candidateB);
+            setCursor(ok);
+          } catch {
+            setCursor(candidateC);
+          }
+        }
+      });
+    })();
+  </script>
+
   <style>
     :root{
       --tile: 90px;
@@ -27,6 +71,9 @@
       --uiTextInset: 8px;
 
       --overlapMono: 80px;
+
+      /* ✅ verrà impostato dallo script sopra */
+      --star-cursor: auto;
     }
 
     *{ box-sizing: border-box; }
@@ -216,11 +263,6 @@
       display: block;
     }
 
-    .embed,
-    .embed iframe{
-      cursor: auto !important;
-    }
-
     .side-desc{ position: relative; min-width: 0; }
 
     .side-text{
@@ -314,16 +356,13 @@
       }
     }
 
-    /* ===== CURSORE STELLA (robusto su GitHub Pages) ===== */
-    :root{
-      --star-cursor: url("./cursor/Red_star.png") 16 16, auto;
-    }
-
+    /* ✅ CURSORE STELLA ovunque */
     html, body, body *{
       cursor: var(--star-cursor) !important;
     }
 
-    /* ✅ ECCEZIONE: sopra i frame progetti torna il cursore normale */
+    /* ✅ se vuoi la stella anche sopra i frame, COMMENTA queste 2 righe.
+       Lasciandole, sopra i frame resta normale (e dentro decide l'iframe). */
     .embed,
     .embed *{
       cursor: auto !important;
@@ -447,9 +486,7 @@
   <script>
     const OFFSET_DEFAULT = -200;
     const OFFSET_MONOGRAMMA = -340;
-
     const OFFSET_DATALB = -500;
-
     const MIN_GAP = 20;
 
     function docTop(el){
@@ -476,10 +513,8 @@
 
         if (embed){
           let offset = OFFSET_DEFAULT;
-
           if (desc.dataset.target === 'progetto3') offset = OFFSET_MONOGRAMMA;
           if (desc.dataset.target === 'progetto4') offset = OFFSET_DATALB;
-
           y = docBottom(embed) - sideTop + offset;
         }
 
