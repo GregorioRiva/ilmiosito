@@ -1,5 +1,5 @@
 // p5.js — GR glitch + stop + split: G a sinistra, R a destra (scaglionato, lento)
-// FIX: pgG/pgR trasparenti (clear) -> niente "sparizioni" / buchi neri
+// Responsive: canvas full iframe + testo scala con size
 
 let pgAll, pgG, pgR;
 
@@ -15,17 +15,37 @@ const DUR_SPLIT     = 2600;
 const DUR_HOLD_OUT  = 850;
 const DUR_SPLIT_IN  = 2400;
 
-// tipografia
-const TXT_SIZE = 180;
-const BASE_Y_OFFSET = 6;
-const LETTER_GAP = 132; // 120..150
-
 // smoothing glitch
 let smoothDX = [];
 
+// parametri dinamici (calcolati in base a canvas)
+let TXT_SIZE = 180;
+let LETTER_GAP = 132;
+let BASE_Y_OFFSET = 0;
+let SLICE_H = 5;
+
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(window.innerWidth, window.innerHeight);
   pixelDensity(1);
+  initBuffers();
+  noiseSeed(2);
+  stateStart = millis();
+}
+
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
+  initBuffers(); // ricrea buffer e parametri
+}
+
+// crea/aggiorna buffer + parametri scalati
+function initBuffers() {
+  // scala tipografia in base alla dimensione minore
+  const s = min(width, height);
+
+  TXT_SIZE = s * 0.62;                 // più grande nel riquadro
+  LETTER_GAP = s * 0.46;               // distanza tra G e R
+  BASE_Y_OFFSET = s * 0.02;            // micro aggiustamento ottico
+  SLICE_H = max(3, floor(s * 0.012));  // strisce proporzionate
 
   pgAll = createGraphics(width, height);
   pgG   = createGraphics(width, height);
@@ -38,11 +58,7 @@ function setup() {
     pg.noStroke();
   }
 
-  noiseSeed(2);
-  stateStart = millis();
-
-  const sliceH = 5;
-  smoothDX = new Array(Math.ceil(height / sliceH)).fill(0);
+  smoothDX = new Array(Math.ceil(height / SLICE_H)).fill(0);
 }
 
 function draw() {
@@ -61,7 +77,7 @@ function draw() {
   pgAll.text("G", xG, cy);
   pgAll.text("R", xR, cy);
 
-  // pgG / pgR: SOLO lettera su fondo TRASPARENTE (FIX)
+  // pgG / pgR: solo lettera su fondo trasparente
   pgG.clear();
   pgG.fill(255);
   pgG.textSize(TXT_SIZE);
@@ -92,7 +108,7 @@ function draw() {
   }
 
   // ampiezza glitch
-  const ampMax = 95;
+  const ampMax = min(120, width * 0.22); // scala con schermo
   let amp = ampMax;
 
   if (state === "easeToStop") {
@@ -108,7 +124,7 @@ function draw() {
     if (state === "splitOut") {
       drawSplitLetters(constrain(elapsed / DUR_SPLIT, 0, 1), "out");
     } else if (state === "holdOut") {
-      drawSplitLetters(1, "out");
+      drawSplitLetters(0.92, "out"); // evita vuoto totale
     } else if (state === "splitIn") {
       drawSplitLetters(constrain(elapsed / DUR_SPLIT_IN, 0, 1), "in");
     } else {
@@ -118,7 +134,7 @@ function draw() {
   }
 
   // glitch a strisce sul buffer GR completo
-  const sliceH = 5;
+  const sliceH = SLICE_H;
   const freqY = 0.012;
   const t = frameCount * 0.018;
 
@@ -159,7 +175,7 @@ function draw() {
 
 // split: G sinistra, R destra (solo laterale, scaglionato, lento)
 function drawSplitLetters(g, mode) {
-  const sliceH = 5;
+  const sliceH = SLICE_H;
   const nSlices = Math.ceil(height / sliceH);
 
   const splitAmp = width * 1.45;
@@ -172,11 +188,10 @@ function drawSplitLetters(g, mode) {
   for (let i = 0; i < nSlices; i++) {
     const y = i * sliceH;
 
-    const yn = i / max(1, nSlices - 1);
-
-    let baseDelay = pow(yn, 3.6) * cascade;
-    let jitter = (noise(i * 0.22 + 12.3) - 0.5) * 0.18;
-    let delayOut = constrain(baseDelay + jitter, 0, 0.98);
+    // ORDINE SPARSO (come la tua prova)
+    let rnd = noise(i * 0.73 + 91.7);
+    rnd = pow(rnd, 2.4);
+    let delayOut = lerp(0.05, 0.88, rnd) * cascade;
 
     let delay = (mode === "out")
       ? delayOut
@@ -201,7 +216,6 @@ function drawSplitLetters(g, mode) {
     const dxG = (-1 + drift) * splitAmp * amount * weight;
     const dxR = ( 1 + drift) * splitAmp * amount * weight;
 
-    // IMPORTANT: pgG/pgR sono trasparenti -> non cancellano niente
     image(pgG, dxG, y, width, sliceH, 0, y, width, sliceH);
     image(pgR, dxR, y, width, sliceH, 0, y, width, sliceH);
   }
