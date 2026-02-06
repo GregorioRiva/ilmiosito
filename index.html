@@ -46,25 +46,10 @@
       transform: translateX(2px);
     }
 
-    /* ✅ CURSORE: SOLO CSS, CON FALLBACK MULTIPLI
-       (funziona se ./cursor/Red_star.png esiste davvero) */
+    /* ✅ CURSORE: una sola regola, path stabile per GitHub Pages (relativo) */
     html, body, body *{
-      cursor:
-        url("cursor/Red_star.png") 16 16,
-        url("./cursor/Red_star.png") 16 16,
-        url("/cursor/Red_star.png") 16 16,
-        auto !important;
+      cursor: url("cursor/redstar.png") 16 16, auto !important;
     }
-
-    /* Se vuoi la stella anche "sopra" i frame, commenta questo blocco */
-    .embed, .embed *{ cursor: auto !important; }
-
-    /* 
-.embed, .embed *{
-  cursor: auto !important;
-}
-*/
-
 
     .top > *, .below > *{ min-width: 0; }
 
@@ -232,11 +217,6 @@
       .char{ font-size: 34px; }
       .social, .top-projects{ grid-template-columns: 1fr; }
     }
-
-    html, body, body *{
-  cursor: url("./cursor/Red_star.png") 16 16, auto !important;
-}
-
   </style>
 </head>
 
